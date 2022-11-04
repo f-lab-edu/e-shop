@@ -3,6 +3,9 @@ package com.example.eshop.common.exception.handler;
 import com.example.eshop.common.dto.ExceptionResult;
 import com.example.eshop.common.dto.ResultType;
 import com.example.eshop.common.exception.BaseException;
+import com.example.eshop.controller.v1.AuthController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -30,20 +33,28 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+    final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     // DB: 중복 데이터
     @ExceptionHandler({DuplicateKeyException.class})
     public ExceptionResult handleDBDuplicateError(DuplicateKeyException ex) {
+        log.error("handleDBDuplicateError ex :::", ex);
+
         return new ExceptionResult(ResultType.DATA_ALREADY_EXIST);
     }
 
     // DB: not-null 항목 안넣은 경우
     @ExceptionHandler({DataIntegrityViolationException.class})
     public ExceptionResult handleDBIntegrityError(DataIntegrityViolationException ex) {
+        log.error("handleDBIntegrityError ex :::", ex);
+
         return new ExceptionResult(ResultType.NOT_ALLOWED_OPERATION);
     }
 
     @ExceptionHandler({BaseException.class})
     public ExceptionResult handleBaseException(BaseException ex) {
+        log.error("handleBaseException ex :::", ex);
+
         return new ExceptionResult(ex.getResultType());
     }
 
@@ -51,6 +62,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex,
                                                                    HttpHeaders headers, HttpStatus status,
                                                                    WebRequest request) {
+        log.error("handleNoHandlerFoundException ex :::", ex);
+
         return new ResponseEntity<>(new ExceptionResult(ResultType.PAGE_NOT_FOUND),
                 ResultType.PAGE_NOT_FOUND.getStatus());
     }
@@ -60,6 +73,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex,
                                                                          HttpHeaders headers, HttpStatus status,
                                                                          WebRequest request) {
+        log.error("handleHttpRequestMethodNotSupported ex :::", ex);
+
         return new ResponseEntity<>(new ExceptionResult(ResultType.METHOD_NOT_ALLOWED),
                 ResultType.METHOD_NOT_ALLOWED.getStatus());
     }
@@ -69,6 +84,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException ex,
                                                                           HttpHeaders headers, HttpStatus status,
                                                                           WebRequest request) {
+        log.error("handleMissingServletRequestParameter ex :::", ex);
+
         return new ResponseEntity<>(new ExceptionResult(ResultType.MISSING_PARAMETER),
                 ResultType.MISSING_PARAMETER.getStatus());
     }
@@ -78,6 +95,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers, HttpStatus status,
                                                                   WebRequest request) {
+        log.error("handleMethodArgumentNotValid ex :::", ex);
+
         return new ResponseEntity<>(new ExceptionResult(ResultType.INVALID_PARAMETER),
                 ResultType.INVALID_PARAMETER.getStatus());
     }
@@ -86,6 +105,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex,
                                                                      HttpHeaders headers, HttpStatus status,
                                                                      WebRequest request) {
+        log.error("handleHttpMediaTypeNotSupported ex :::", ex);
+
         return new ResponseEntity<>(new ExceptionResult(ResultType.UNSUPPORTED_MEDIA_TYPE),
                 ResultType.UNSUPPORTED_MEDIA_TYPE.getStatus());
     }
@@ -94,6 +115,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleHttpMediaTypeNotAcceptable(HttpMediaTypeNotAcceptableException ex,
                                                                       HttpHeaders headers, HttpStatus status,
                                                                       WebRequest request) {
+        log.error("handleHttpMediaTypeNotAcceptable ex :::", ex);
+
         return new ResponseEntity<>(new ExceptionResult(ResultType.UNSUPPORTED_MEDIA_TYPE),
                 ResultType.UNSUPPORTED_MEDIA_TYPE.getStatus());
     }
@@ -102,6 +125,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMissingPathVariable(MissingPathVariableException ex,
                                                                HttpHeaders headers, HttpStatus status,
                                                                WebRequest request) {
+        log.error("handleMissingPathVariable ex :::", ex);
+
         return new ResponseEntity<>(new ExceptionResult(ResultType.MISSING_PARAMETER),
                 ResultType.MISSING_PARAMETER.getStatus());
     }
@@ -110,6 +135,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleServletRequestBindingException(ServletRequestBindingException ex,
                                                                           HttpHeaders headers, HttpStatus status,
                                                                           WebRequest request) {
+        log.error("handleServletRequestBindingException ex :::", ex);
+
         return new ResponseEntity<>(new ExceptionResult(ResultType.INVALID_PARAMETER),
                 ResultType.INVALID_PARAMETER.getStatus());
     }
@@ -118,6 +145,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleConversionNotSupported(ConversionNotSupportedException ex,
                                                                   HttpHeaders headers, HttpStatus status,
                                                                   WebRequest request) {
+        log.error("handleConversionNotSupported ex :::", ex);
+
         return new ResponseEntity<>(new ExceptionResult(ResultType.NOT_ALLOWED_OPERATION),
                 ResultType.NOT_ALLOWED_OPERATION.getStatus());
     }
@@ -126,6 +155,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex,
                                                         HttpHeaders headers, HttpStatus status,
                                                         WebRequest request) {
+        log.error("handleTypeMismatch ex :::", ex);
+
         return new ResponseEntity<>(new ExceptionResult(ResultType.INVALID_PARAMETER),
                 ResultType.INVALID_PARAMETER.getStatus());
     }
@@ -134,6 +165,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
                                                                   HttpHeaders headers, HttpStatus status,
                                                                   WebRequest request) {
+        log.error("handleHttpMessageNotReadable ex :::", ex);
+
         return new ResponseEntity<>(new ExceptionResult(ResultType.INVALID_PARAMETER),
                 ResultType.INVALID_PARAMETER.getStatus());
     }
@@ -142,6 +175,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleHttpMessageNotWritable(HttpMessageNotWritableException ex,
                                                                   HttpHeaders headers, HttpStatus status,
                                                                   WebRequest request) {
+        log.error("handleHttpMessageNotWritable ex :::", ex);
+
         return new ResponseEntity<>(new ExceptionResult(ResultType.NOT_ALLOWED_OPERATION),
                 ResultType.NOT_ALLOWED_OPERATION.getStatus());
     }
@@ -150,6 +185,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMissingServletRequestPart(MissingServletRequestPartException ex,
                                                                      HttpHeaders headers, HttpStatus status,
                                                                      WebRequest request) {
+        log.error("handleMissingServletRequestPart ex :::", ex);
+
         return new ResponseEntity<>(new ExceptionResult(ResultType.INVALID_PARAMETER),
                 ResultType.INVALID_PARAMETER.getStatus());
     }
@@ -158,6 +195,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleBindException(BindException ex,
                                                          HttpHeaders headers, HttpStatus status,
                                                          WebRequest request) {
+        log.error("handleBindException ex :::", ex);
+
         return new ResponseEntity<>(new ExceptionResult(ResultType.INVALID_PARAMETER),
                 ResultType.INVALID_PARAMETER.getStatus());
     }
@@ -166,6 +205,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleAsyncRequestTimeoutException(AsyncRequestTimeoutException ex,
                                                                         HttpHeaders headers, HttpStatus status,
                                                                         WebRequest webRequest) {
+        log.error("handleAsyncRequestTimeoutException ex :::", ex);
+
         return new ResponseEntity<>(new ExceptionResult(ResultType.SERVICE_UNAVAILABLE),
                 ResultType.SERVICE_UNAVAILABLE.getStatus());
     }
