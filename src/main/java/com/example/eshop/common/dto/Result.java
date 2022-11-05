@@ -1,5 +1,6 @@
 package com.example.eshop.common.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Result {
+    @JsonIgnore
     private ResultType resultType;
 
     private String code;
@@ -21,5 +23,13 @@ public class Result {
     public Result(Object data) {
         this.resultType = ResultType.OK;
         this.data = data;
+    }
+
+    public String getCode() {
+        return this.resultType.getCode();
+    }
+
+    public String getMessage() {
+        return this.resultType.getMessage();
     }
 }
