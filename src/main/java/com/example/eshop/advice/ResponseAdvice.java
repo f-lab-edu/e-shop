@@ -32,7 +32,7 @@ public class ResponseAdvice implements ResponseBodyAdvice<Object> {
             result = new Result(body);
         }
 
-        response.setStatusCode(result.getResultType().getStatus());
+        response.setStatusCode(result.getStatus());
         return result;
     }
 }
