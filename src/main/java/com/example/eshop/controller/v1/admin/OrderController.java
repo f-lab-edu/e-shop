@@ -1,11 +1,11 @@
-package com.example.eshop.controller.v1;
+package com.example.eshop.controller.v1.admin;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping(value="/v1/orders")
+@RestController("AdminOrderController")
+@RequestMapping(value="/v1/admin/orders")
 @RequiredArgsConstructor
 public class OrderController {
 }
