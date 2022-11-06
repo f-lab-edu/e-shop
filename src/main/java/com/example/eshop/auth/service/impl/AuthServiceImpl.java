@@ -14,6 +14,11 @@ public class AuthServiceImpl implements AuthService {
     private final AuthRepository authRepository;
 
     @Override
+    public boolean isDuplicatedId(String id) {
+        return authRepository.isDuplicatedId(id);
+    }
+
+    @Override
     public void signin(UserDto userDto) {
         UserEntity user = UserEntity.builder()
                 .userId(userDto.getId())

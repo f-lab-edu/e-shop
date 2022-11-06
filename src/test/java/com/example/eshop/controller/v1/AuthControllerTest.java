@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -22,10 +23,21 @@ class AuthControllerTest {
     private MockMvc mvc;
     private ObjectMapper objectMapper;
 
+    @Autowired
     public void setAuthControllerTest(MockMvc mvc,
                                       ObjectMapper objectMapper) {
         this.mvc = mvc;
         this.objectMapper = objectMapper;
+    }
+
+    @Test
+    @DisplayName("checkDuplicatedId :: 정상 케이스")
+    void checkDuplicatedId() throws Exception {
+        mvc.perform(get("/v1/auth/check/duplicated-id?id=hjkim")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8"))
+                .andExpect(status().isOk())
+                .andDo(print());
     }
 
     @Test

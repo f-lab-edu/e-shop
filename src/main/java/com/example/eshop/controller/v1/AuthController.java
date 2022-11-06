@@ -18,6 +18,19 @@ public class AuthController {
     private final AuthService authService;
 
     /**
+     * 아이디 중복조회
+     *
+     * @author hjkim
+     * @param id
+     */
+    @GetMapping(value="/check/duplicated-id")
+    public boolean checkDuplicatedId(@RequestParam String id) {
+        logger.info("checkDuplicatedId ::: {}", id);
+
+        return authService.isDuplicatedId(id);
+    }
+
+    /**
      * 회원가입
      *
      * @author hjkim

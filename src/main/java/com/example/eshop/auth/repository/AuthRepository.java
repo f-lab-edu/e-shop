@@ -5,5 +5,6 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface AuthRepository {
+    boolean isDuplicatedId(String userId);
     void signin(UserEntity user);
 }
