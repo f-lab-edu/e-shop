@@ -74,9 +74,9 @@ public class AuthController {
      * @author hjkim
      */
     @GetMapping(value="/token/refresh")
-    public TokenDto refreshToken() {
-        logger.info("refreshToken");
+    public TokenDto refreshToken(@RequestAttribute long userSeq) {
+        logger.info("refreshToken ::: {}", userSeq);
 
-        return authService.refreshToken(1);
+        return authService.refreshToken(userSeq);
     }
 }

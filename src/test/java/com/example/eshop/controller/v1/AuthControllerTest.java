@@ -1,5 +1,7 @@
 package com.example.eshop.controller.v1;
 
+import com.example.eshop.common.type.TokenType;
+import com.example.eshop.common.util.JwtUtil;
 import com.example.eshop.controller.dto.LoginDto;
 import com.example.eshop.controller.dto.UserDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,12 +25,15 @@ class AuthControllerTest {
 
     private MockMvc mvc;
     private ObjectMapper objectMapper;
+    String refreshToken;
 
     @Autowired
     public void setAuthControllerTest(MockMvc mvc,
-                                      ObjectMapper objectMapper) {
+                                      ObjectMapper objectMapper,
+                                      JwtUtil jwtUtil) {
         this.mvc = mvc;
         this.objectMapper = objectMapper;
+        this.refreshToken = jwtUtil.generate(1, TokenType.REFRESH);
     }
 
     @Test
@@ -79,6 +84,7 @@ class AuthControllerTest {
     void refreshToken() throws Exception {
 
         mvc.perform(get("/v1/auth/token/refresh")
+                        .header(TokenType.REFRESH.getHeaderName(), refreshToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("utf-8"))
                 .andExpect(status().isOk())
