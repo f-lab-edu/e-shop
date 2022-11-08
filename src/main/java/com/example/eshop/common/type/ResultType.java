@@ -1,4 +1,4 @@
-package com.example.eshop.common.dto;
+package com.example.eshop.common.type;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

@@ -42,4 +42,21 @@
         , now()
         )
     </insert>
+
+    <select id="findUserByUserId" parameterType="String" resultType="UserEntity">
+        SELECT user_no
+             , user_id
+             , password
+        FROM tb_member
+        WHERE 1=1
+          AND user_id = #{userId}
+    </select>
+
+    <select id="findUserByUserNo" parameterType="long" resultType="UserEntity">
+        SELECT user_no
+             , user_id
+        FROM tb_member
+        WHERE 1=1
+          AND user_no = #{userNo}
+    </select>
 </mapper>

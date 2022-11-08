@@ -1,6 +1,8 @@
 package com.example.eshop.controller.v1;
 
 import com.example.eshop.auth.service.AuthService;
+import com.example.eshop.controller.dto.LoginDto;
+import com.example.eshop.controller.dto.TokenDto;
 import com.example.eshop.controller.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -41,5 +43,40 @@ public class AuthController {
         logger.info("signin ::: {}", userDto);
 
         authService.signin(userDto);
+    }
+
+    /**
+     * 로그인
+     *
+     * @author hjkim
+     * @param loginDto
+     */
+    @PostMapping(value="/login")
+    public TokenDto login(@Valid @RequestBody LoginDto loginDto) {
+        logger.info("login ::: {}", loginDto);
+
+        return authService.login(loginDto);
+    }
+
+    /**
+     * 로그아웃
+     *
+     * @author hjkim
+     */
+    @PostMapping(value="/logout")
+    public void logout() {
+        logger.info("logout");
+    }
+
+    /**
+     * 토큰 갱신
+     *
+     * @author hjkim
+     */
+    @GetMapping(value="/token/refresh")
+    public TokenDto refreshToken() {
+        logger.info("refreshToken");
+
+        return authService.refreshToken(1);
     }
 }

@@ -1,6 +1,6 @@
 package com.example.eshop.common.exception;
 
-import com.example.eshop.common.dto.ResultType;
+import com.example.eshop.common.type.ResultType;
 
 public class BaseException extends RuntimeException {
 

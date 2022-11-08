@@ -1,5 +1,6 @@
 package com.example.eshop.common.dto;
 
+import com.example.eshop.common.type.ResultType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.NoArgsConstructor;

@@ -1,9 +1,8 @@
 package com.example.eshop.common.exception.handler;
 
 import com.example.eshop.common.dto.ExceptionResult;
-import com.example.eshop.common.dto.ResultType;
+import com.example.eshop.common.type.ResultType;
 import com.example.eshop.common.exception.BaseException;
-import com.example.eshop.controller.v1.AuthController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.ConversionNotSupportedException;

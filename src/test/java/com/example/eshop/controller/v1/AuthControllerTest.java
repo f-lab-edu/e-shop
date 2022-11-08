@@ -1,5 +1,6 @@
 package com.example.eshop.controller.v1;
 
+import com.example.eshop.controller.dto.LoginDto;
 import com.example.eshop.controller.dto.UserDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -54,6 +55,32 @@ class AuthControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("utf-8")
                 .content(content))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("login :: 정상 케이스")
+    void login() throws Exception {
+        String content = objectMapper.writeValueAsString(
+                new LoginDto("hjkim", "asdf")
+        );
+
+        mvc.perform(post("/v1/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(content))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("refreshToken :: 정상 케이스")
+    void refreshToken() throws Exception {
+
+        mvc.perform(get("/v1/auth/token/refresh")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8"))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
