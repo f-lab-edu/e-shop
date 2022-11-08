@@ -45,7 +45,9 @@ class AuthControllerTest {
     @DisplayName("signin :: 정상 케이스")
     void signin() throws Exception {
         String content = objectMapper.writeValueAsString(
-                new UserDto()
+                new UserDto("hjkim", "test", "01", "test",
+                        "01012341234", "000001",
+                        "Seoul", "Y")
         );
 
         mvc.perform(post("/v1/auth/signin")
