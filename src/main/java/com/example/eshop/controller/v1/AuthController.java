@@ -5,18 +5,16 @@ import com.example.eshop.controller.dto.LoginDto;
 import com.example.eshop.controller.dto.TokenDto;
 import com.example.eshop.controller.dto.UserDto;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+@Slf4j
 @RestController
 @RequestMapping("/v1/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    final Logger logger = LoggerFactory.getLogger(AuthController.class);
-
     private final AuthService authService;
 
     /**
@@ -27,7 +25,7 @@ public class AuthController {
      */
     @GetMapping(value="/check/duplicated-id")
     public boolean checkDuplicatedId(@RequestParam String id) {
-        logger.info("checkDuplicatedId ::: {}", id);
+        log.info("checkDuplicatedId ::: {}", id);
 
         return authService.isDuplicatedId(id);
     }
@@ -40,7 +38,7 @@ public class AuthController {
      */
     @PostMapping(value="/signin")
     public void signin(@Valid @RequestBody UserDto userDto) {
-        logger.info("signin ::: {}", userDto);
+        log.info("signin ::: {}", userDto);
 
         authService.signin(userDto);
     }
@@ -53,7 +51,7 @@ public class AuthController {
      */
     @PostMapping(value="/login")
     public TokenDto login(@Valid @RequestBody LoginDto loginDto) {
-        logger.info("login ::: {}", loginDto);
+        log.info("login ::: {}", loginDto);
 
         return authService.login(loginDto);
     }
@@ -65,7 +63,7 @@ public class AuthController {
      */
     @PostMapping(value="/logout")
     public void logout() {
-        logger.info("logout");
+        log.info("logout");
     }
 
     /**
@@ -75,7 +73,7 @@ public class AuthController {
      */
     @GetMapping(value="/token/refresh")
     public TokenDto refreshToken(@RequestAttribute long userSeq) {
-        logger.info("refreshToken ::: {}", userSeq);
+        log.info("refreshToken ::: {}", userSeq);
 
         return authService.refreshToken(userSeq);
     }
