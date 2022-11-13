@@ -19,8 +19,11 @@ public class JwtUtil {
     @Value("${jwt.secret}")
     private String secret;
 
-    @Value("${jwt.expiration}")
-    private String expiration;
+    @Value("${jwt.access.expiration}")
+    private long accessTokenExpiration;
+
+    @Value("${jwt.refresh.expiration}")
+    private long refreshTokenExpiration;
 
     private Key key;
 
@@ -40,8 +43,8 @@ public class JwtUtil {
         final Date createdDate = new Date();
 
         // 3. token 만료일
-        long expirationTime = Long.parseLong(expiration) * 1000
-                * type.getExpMultiplier();
+        long expirationTime = TokenType.ACCESS.equals(type) ? accessTokenExpiration
+                : refreshTokenExpiration;
 
         final Date expirationDate = new Date(createdDate.getTime() + expirationTime);
 
