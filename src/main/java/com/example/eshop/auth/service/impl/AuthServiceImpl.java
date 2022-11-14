@@ -10,8 +10,10 @@ import com.example.eshop.controller.dto.LoginDto;
 import com.example.eshop.controller.dto.TokenDto;
 import com.example.eshop.controller.dto.UserDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
@@ -21,11 +23,14 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public boolean isDuplicatedId(String id) {
+        log.info("isDuplicatedId ::: {}", id);
         return authRepository.isDuplicatedId(id);
     }
 
     @Override
     public void signin(UserDto userDto) {
+        log.info("signin ::: {}", userDto);
+
         UserEntity user = UserEntity.builder()
                 .userId(userDto.getId())
                 .name(userDto.getName())
@@ -42,6 +47,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public TokenDto login(LoginDto loginDto) {
+        log.info("login ::: {}", loginDto);
         UserEntity user = authRepository.findUserByUserId(loginDto.getId());
 
         validateUser(user);
@@ -57,6 +63,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public TokenDto refreshToken(long userSeq) {
+        log.info("refreshToken ::: {}", userSeq);
         UserEntity user = authRepository.findUserByUserNo(userSeq);
 
         validateUser(user);
