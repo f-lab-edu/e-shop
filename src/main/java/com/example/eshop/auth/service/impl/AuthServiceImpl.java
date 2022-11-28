@@ -56,8 +56,8 @@ public class AuthServiceImpl implements AuthService {
             throw new UserNotFoundException();
         }
         return new TokenDto(
-                jwtUtil.generate(user.getUserNo(), TokenType.ACCESS),
-                jwtUtil.generate(user.getUserNo(), TokenType.REFRESH)
+                jwtUtil.generate(TokenType.ACCESS),
+                jwtUtil.generate(TokenType.REFRESH)
         );
     }
 
@@ -69,7 +69,7 @@ public class AuthServiceImpl implements AuthService {
         validateUser(user);
 
         return new TokenDto(
-                jwtUtil.generate(user.getUserNo(), TokenType.ACCESS)
+                jwtUtil.generate(TokenType.ACCESS)
         );
     }
 

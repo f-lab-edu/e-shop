@@ -33,7 +33,7 @@ class AuthControllerTest {
                                       JwtUtil jwtUtil) {
         this.mvc = mvc;
         this.objectMapper = objectMapper;
-        this.refreshToken = jwtUtil.generate(1, TokenType.REFRESH);
+        this.refreshToken = jwtUtil.generate(TokenType.REFRESH);
     }
 
     @Test

@@ -1,6 +1,5 @@
 package com.example.eshop.interceptor;
 
-import com.example.eshop.common.exception.InvalidTokenException;
 import com.example.eshop.common.exception.TokenExpiredException;
 import com.example.eshop.common.exception.TokenRequiredException;
 import com.example.eshop.common.type.TokenType;
@@ -35,7 +34,6 @@ public abstract class AuthInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         checkTokenExist();
         validateToken();
-        setUserSeqToAttribute(request);
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }
 
@@ -52,19 +50,9 @@ public abstract class AuthInterceptor implements HandlerInterceptor {
     }
 
     protected void validateToken() {
-        String extractedTypeName = jwtUtil.getTypeFromToken(this.token);
-        if (!this.tokenTypeName.equals(extractedTypeName)) {
-            throw new InvalidTokenException();
-        }
-
-        if (jwtUtil.isExpired(this.token)) {
+        if (jwtUtil.isValid(this.token)) {
             throw new TokenExpiredException();
         }
-    }
-
-    private void setUserSeqToAttribute(HttpServletRequest request) {
-        Long userSeq = jwtUtil.getUserSeqFromToken(this.token);
-        request.setAttribute(USER_SEQ_ATTRIBUTE_KEY, userSeq);
     }
 
 }
