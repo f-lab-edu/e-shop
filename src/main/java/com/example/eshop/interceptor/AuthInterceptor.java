@@ -50,7 +50,7 @@ public abstract class AuthInterceptor implements HandlerInterceptor {
     }
 
     protected void validateToken() {
-        if (jwtUtil.isValid(this.token)) {
+        if (!jwtUtil.isValid(this.token)) {
             throw new TokenExpiredException();
         }
     }
