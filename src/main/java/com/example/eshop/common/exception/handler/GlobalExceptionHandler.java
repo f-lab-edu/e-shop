@@ -3,6 +3,7 @@ package com.example.eshop.common.exception.handler;
 import com.example.eshop.common.dto.ExceptionResult;
 import com.example.eshop.common.type.ResultType;
 import com.example.eshop.common.exception.BaseException;
+import io.jsonwebtoken.JwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.ConversionNotSupportedException;
@@ -48,6 +49,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.error("handleDBIntegrityError ex :::", ex);
 
         return new ExceptionResult(ResultType.NOT_ALLOWED_OPERATION);
+    }
+
+    // 형식이 잘못된 토큰인 경우와 그 외 jwt 토큰 처리 과정에서 생기는 에러
+    @ExceptionHandler({JwtException.class})
+    public ExceptionResult handleJwtException(JwtException ex) {
+        log.error("handleJwtException ex :::", ex);
+
+        return new ExceptionResult(ResultType.INVALID_TOKEN);
     }
 
     @ExceptionHandler({BaseException.class})
