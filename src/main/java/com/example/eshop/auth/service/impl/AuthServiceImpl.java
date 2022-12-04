@@ -13,6 +13,7 @@ import com.example.eshop.controller.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -49,6 +50,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public TokenDto login(LoginDto loginDto) {
         log.info("login ::: {}", loginDto);
 
@@ -88,6 +90,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public TokenDto refreshToken(long userSeq) {
         log.info("refreshToken ::: {}", userSeq);
 
