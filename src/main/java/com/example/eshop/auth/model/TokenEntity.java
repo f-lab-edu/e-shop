@@ -1,22 +1,13 @@
 package com.example.eshop.auth.model;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
 public class TokenEntity {
-    @Value("${jwt.access.expiration}")
-    private long accessTokenExpiration;
-
-    @Value("${jwt.refresh.expiration}")
-    private long refreshTokenExpiration;
-
-
     private long tokenNo;
 
     private String userType;
@@ -36,10 +27,11 @@ public class TokenEntity {
     private LocalDateTime updDt;
 
 
-    @Builder
     public TokenEntity(long userNo,
                        String randomAccessToken,
-                       String randomRefreshToken) {
+                       String randomRefreshToken,
+                       long accessTokenExpiration,
+                       long refreshTokenExpiration) {
         this.userType = "01";
         this.userNo = userNo;
         this.randomAccessToken = randomAccessToken;

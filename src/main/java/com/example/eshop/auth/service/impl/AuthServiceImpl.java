@@ -12,6 +12,7 @@ import com.example.eshop.controller.dto.TokenDto;
 import com.example.eshop.controller.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,12 @@ public class AuthServiceImpl implements AuthService {
 
     private final JwtUtil jwtUtil;
     private final AuthRepository authRepository;
+
+    @Value("${jwt.access.expiration}")
+    private long accessTokenExpiration;
+
+    @Value("${jwt.refresh.expiration}")
+    private long refreshTokenExpiration;
 
     @Override
     public boolean isDuplicatedId(String id) {
@@ -109,7 +116,9 @@ public class AuthServiceImpl implements AuthService {
     private TokenEntity generateNewTokenEntity(long userNo) {
         return new TokenEntity(userNo,
                 jwtUtil.generateRandomString(TokenType.ACCESS),
-                jwtUtil.generateRandomString(TokenType.REFRESH));
+                jwtUtil.generateRandomString(TokenType.REFRESH),
+                accessTokenExpiration,
+                refreshTokenExpiration);
     }
 
     private TokenDto getJwtTokenFromRandomToken(TokenEntity token) {
