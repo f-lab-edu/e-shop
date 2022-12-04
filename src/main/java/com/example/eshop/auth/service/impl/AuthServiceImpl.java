@@ -114,11 +114,38 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private TokenEntity generateNewTokenEntity(long userNo) {
+        String accessRandomToken = generateUniqueAccessRandomToken();
+        String refreshRandomToken = generateUniqueRefreshRandomToken();
+
         return new TokenEntity(userNo,
-                jwtUtil.generateRandomString(TokenType.ACCESS),
-                jwtUtil.generateRandomString(TokenType.REFRESH),
+                accessRandomToken,
+                refreshRandomToken,
                 accessTokenExpiration,
                 refreshTokenExpiration);
+    }
+
+    private String generateUniqueAccessRandomToken() {
+        String accessRandomToken = jwtUtil.generateRandomString(TokenType.ACCESS);
+        TokenEntity accessTokenEntity = authRepository.findAccessTokenByRandomToken(accessRandomToken);
+
+        while (accessTokenEntity != null) {
+            accessRandomToken = jwtUtil.generateRandomString(TokenType.ACCESS);
+            accessTokenEntity = authRepository.findAccessTokenByRandomToken(accessRandomToken);
+        }
+
+        return accessRandomToken;
+    }
+
+    private String generateUniqueRefreshRandomToken() {
+        String refreshRandomToken = jwtUtil.generateRandomString(TokenType.REFRESH);
+        TokenEntity refreshTokenEntity = authRepository.findRefreshTokenByRandomToken(refreshRandomToken);
+
+        while (refreshTokenEntity != null) {
+            refreshRandomToken = jwtUtil.generateRandomString(TokenType.REFRESH);
+            refreshTokenEntity = authRepository.findRefreshTokenByRandomToken(refreshRandomToken);
+        }
+
+        return refreshRandomToken;
     }
 
     private TokenDto getJwtTokenFromRandomToken(TokenEntity token) {

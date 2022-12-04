@@ -34,10 +34,6 @@ public class JwtUtil {
         return RandomUtil.generateString(length);
     }
 
-    public String generate(TokenType type) {
-        return generate(generateRandomString(type));
-    }
-
     public String generate(String randomString) {
         Map<String, Object> claims = new HashMap<>();
         claims.put(RANDOM_STRING_KEY, randomString);
