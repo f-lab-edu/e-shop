@@ -14,10 +14,11 @@ public enum ResultType {
     USER_ALREADY_ENROLLED(HttpStatus.BAD_REQUEST, "400005", "User already enrolled"),
 
     UNKNOWN_USER(HttpStatus.UNAUTHORIZED, "401001", "Unknown user"),
-    REQUIRED_TOKEN(HttpStatus.UNAUTHORIZED, "401002", "Token required"),
-    INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "401003", "Invalid token"),
-    EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "401004", "Token expired"),
-    NO_ROLE(HttpStatus.UNAUTHORIZED, "401005", "No Role"),
+    ACCESS_TOKEN_REQUIRED(HttpStatus.UNAUTHORIZED, "401002", "Access token required"),
+    REFRESH_TOKEN_REQUIRED(HttpStatus.UNAUTHORIZED, "401003", "Refresh token required"),
+    INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "401004", "Invalid token"),
+    EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "401005", "Token expired"),
+    NO_ROLE(HttpStatus.UNAUTHORIZED, "401006", "No Role"),
 
     PAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "404001", "Page not found"),
     DATA_NOT_FOUND(HttpStatus.NOT_FOUND, "404002", "Data not found"),

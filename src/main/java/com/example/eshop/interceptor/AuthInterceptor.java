@@ -1,13 +1,12 @@
 package com.example.eshop.interceptor;
 
-import com.example.eshop.common.exception.TokenExpiredException;
-import com.example.eshop.common.exception.TokenRequiredException;
+import com.example.eshop.auth.model.TokenEntity;
+import com.example.eshop.auth.repository.AuthRepository;
 import com.example.eshop.common.type.TokenType;
 import com.example.eshop.common.util.JwtUtil;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,9 +16,10 @@ import javax.servlet.http.HttpServletResponse;
 @RequiredArgsConstructor
 public abstract class AuthInterceptor implements HandlerInterceptor {
 
-    private final JwtUtil jwtUtil;
-
     private static final String USER_SEQ_ATTRIBUTE_KEY = "userSeq";
+
+    protected final JwtUtil jwtUtil;
+    protected final AuthRepository authRepository;
 
     @Setter
     private String token;
@@ -30,10 +30,14 @@ public abstract class AuthInterceptor implements HandlerInterceptor {
     @Setter
     private String tokenTypeName;
 
+    @Setter
+    private TokenEntity tokenEntity;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         checkTokenExist();
-        validateToken();
+        checkTokenExpired();
+        setUserSeqToAttribute(request);
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }
 
@@ -43,16 +47,10 @@ public abstract class AuthInterceptor implements HandlerInterceptor {
         this.setTokenTypeName(type.name());
     }
 
-    private void checkTokenExist() {
-        if (StringUtils.isEmpty(this.token)) {
-            throw new TokenRequiredException();
-        }
-    }
+    abstract void checkTokenExist();
+    abstract void checkTokenExpired();
 
-    protected void validateToken() {
-        if (!jwtUtil.isValid(this.token)) {
-            throw new TokenExpiredException();
-        }
+    private void setUserSeqToAttribute(HttpServletRequest request) {
+        request.setAttribute(USER_SEQ_ATTRIBUTE_KEY, this.tokenEntity.getUserNo());
     }
-
 }

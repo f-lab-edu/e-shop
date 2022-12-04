@@ -1,5 +1,6 @@
 package com.example.eshop.auth.service.impl;
 
+import com.example.eshop.auth.model.TokenEntity;
 import com.example.eshop.auth.model.UserEntity;
 import com.example.eshop.auth.repository.AuthRepository;
 import com.example.eshop.auth.service.AuthService;
@@ -12,6 +13,8 @@ import com.example.eshop.controller.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Slf4j
 @Service
@@ -48,32 +51,65 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public TokenDto login(LoginDto loginDto) {
         log.info("login ::: {}", loginDto);
-        UserEntity user = authRepository.findUserByUserId(loginDto.getId());
 
-        validateUser(user);
+        // 비밀번호 맞는지 확인
+        UserEntity user = authRepository.findUserByUserId(loginDto.getId());
+        checkUserExist(user);
 
         if (!user.getPassword().equals(loginDto.getPassword())) {
             throw new UserNotFoundException();
         }
+
+        // 토큰 있는지 확인
+        TokenEntity token = authRepository.findAccessTokenByUserNo(user.getUserNo());
+
+        if (token != null) {
+            // 있다면 유효기간 지났는지 확인
+            if (token.getAccessExpireDt().isAfter(LocalDateTime.now())) {
+                return new TokenDto(
+                        jwtUtil.generate(token.getRandomAccessToken()),
+                        jwtUtil.generate(token.getRandomRefreshToken())
+                );
+            }
+        }
+
+        // 토큰 없거나 유효기간 지났으면 : 토큰 생성
+        TokenEntity newToken = new TokenEntity(user.getUserNo(),
+                jwtUtil.generateRandomString(TokenType.ACCESS),
+                jwtUtil.generateRandomString(TokenType.REFRESH));
+
+        // db insert
+        authRepository.insertToken(newToken);
+
         return new TokenDto(
-                jwtUtil.generate(TokenType.ACCESS),
-                jwtUtil.generate(TokenType.REFRESH)
+                jwtUtil.generate(newToken.getRandomAccessToken()),
+                jwtUtil.generate(newToken.getRandomRefreshToken())
         );
     }
 
     @Override
     public TokenDto refreshToken(long userSeq) {
         log.info("refreshToken ::: {}", userSeq);
-        UserEntity user = authRepository.findUserByUserNo(userSeq);
 
-        validateUser(user);
+        // 기존토큰 만료일 update
+        authRepository.updateExpireDt(userSeq);
+
+
+        // 토큰 생성
+        TokenEntity newToken = new TokenEntity(userSeq,
+                jwtUtil.generateRandomString(TokenType.ACCESS),
+                jwtUtil.generateRandomString(TokenType.REFRESH));
+
+        // db insert
+        authRepository.insertToken(newToken);
 
         return new TokenDto(
-                jwtUtil.generate(TokenType.ACCESS)
+                jwtUtil.generate(newToken.getRandomAccessToken()),
+                jwtUtil.generate(newToken.getRandomRefreshToken())
         );
     }
 
-    private void validateUser(UserEntity user) {
+    private void checkUserExist(UserEntity user) {
         if (user == null) {
             throw new UserNotFoundException();
         }

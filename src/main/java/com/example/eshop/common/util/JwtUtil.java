@@ -1,10 +1,7 @@
 package com.example.eshop.common.util;
 
-import com.example.eshop.auth.model.TokenEntity;
-import com.example.eshop.auth.repository.AuthRepository;
 import com.example.eshop.common.type.TokenType;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
@@ -13,28 +10,18 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.security.Key;
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
 public class JwtUtil {
+    private static final String RANDOM_STRING_KEY = "randomToken";
 
     @Value("${jwt.secret}")
     private String secret;
 
-    @Value("${jwt.access.expiration}")
-    private long accessTokenExpiration;
-
-    @Value("${jwt.refresh.expiration}")
-    private long refreshTokenExpiration;
-
     private Key key;
-
-    private final RandomUtil randomUtil;
-    private final AuthRepository authRepository;
 
     @PostConstruct
     public void init() {
@@ -42,43 +29,27 @@ public class JwtUtil {
     }
 
 
-    public String generate(TokenType type) {
-
+    public String generateRandomString(TokenType type) {
         int length = TokenType.ACCESS.equals(type) ? 50 : 55;
-        String randomString = randomUtil.generateString(length);
+        return RandomUtil.generateString(length);
+    }
 
+    public String generate(TokenType type) {
+        return generate(generateRandomString(type));
+    }
+
+    public String generate(String randomString) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("randomId", randomString);
-
-        final Date createdDate = new Date();
-
-        long expirationTime = TokenType.ACCESS.equals(type) ?
-                accessTokenExpiration : refreshTokenExpiration;
-        final Date expirationDate = new Date(createdDate.getTime() + expirationTime);
+        claims.put(RANDOM_STRING_KEY, randomString);
 
         return Jwts.builder()
-                .setClaims(claims)      // 1
-                .setIssuedAt(createdDate)       // 2
-                .setExpiration(expirationDate)      // 3
+                .setClaims(claims)
                 .signWith(key)
                 .compact();
     }
 
-
-    public boolean isValid(String token) {
-        Claims claims;
-        try {
-            claims = getClaimsFromToken(token);
-        } catch (ExpiredJwtException ex) {
-            return false;
-        }
-
-        String type = claims.get("type", String.class);
-        String randomStr = claims.get("randomId", String.class);
-        TokenEntity tokenEntity = authRepository.findByTypeAndRandomStr(type, randomStr);
-
-        return tokenEntity.getExpireDt().isAfter(LocalDate.now())
-                && tokenEntity.getDiscardDt().isAfter(LocalDate.now());
+    public String getRandomToken(String token) {
+        return getClaimsFromToken(token).get(RANDOM_STRING_KEY, String.class);
     }
 
     private Claims getClaimsFromToken(String token) {

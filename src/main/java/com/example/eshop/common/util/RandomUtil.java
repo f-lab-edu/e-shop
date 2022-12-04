@@ -1,15 +1,13 @@
 package com.example.eshop.common.util;
 
-import org.springframework.stereotype.Component;
-
 import java.util.Random;
 
-@Component
 public class RandomUtil {
     private static final String BASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    private final Random rand = new Random();
+    private static Random rand;
 
-    public String generateString(int length) {
+    public static String generateString(int length) {
+        rand = new Random();
         StringBuilder randomString = new StringBuilder();
         for (int i=0; i<length; i++) {
             int idx = rand.nextInt(BASE.length());

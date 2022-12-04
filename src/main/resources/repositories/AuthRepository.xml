@@ -1,19 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.eshop.auth.repository.AuthRepository">
-    <select id="findByTypeAndRandomStr" resultType="TokenEntity">
-        SELECT token_no
-             , user_no
-             , type
-             , random_str
-             , expire_dt
-             , discard_dt
-        FROM tb_token
-        WHERE 1=1
-          AND type = #{type}
-          AND random_str = #{randomStr}
-    </select>
-
     <select id="isDuplicatedId" parameterType="String" resultType="boolean">
         SELECT EXISTS(SELECT user_id
                       FROM tb_member
@@ -65,6 +52,42 @@
           AND user_id = #{userId}
     </select>
 
+    <select id="findAccessTokenByUserNo" parameterType="long" resultType="TokenEntity">
+        SELECT token_no
+             , user_no
+             , random_access_token
+             , access_expire_dt
+             , reg_dt
+             , upd_dt
+        FROM tb_token3
+        WHERE 1=1
+          AND user_no = #{userNo}
+    </select>
+
+    <select id="findAccessTokenByRandomToken" resultType="TokenEntity">
+        SELECT token_no
+             , user_no
+             , random_access_token
+             , access_expire_dt
+             , reg_dt
+             , upd_dt
+        FROM tb_token3
+        WHERE 1=1
+          AND random_access_token = #{randomToken}
+    </select>
+
+    <select id="findRefreshTokenByRandomToken" resultType="TokenEntity">
+        SELECT token_no
+             , user_no
+             , random_refresh_token
+             , refresh_expire_dt
+             , reg_dt
+             , upd_dt
+        FROM tb_token3
+        WHERE 1=1
+          AND random_refresh_token = #{randomToken}
+    </select>
+
     <select id="findUserByUserNo" parameterType="long" resultType="UserEntity">
         SELECT user_no
              , user_id
@@ -72,4 +95,12 @@
         WHERE 1=1
           AND user_no = #{userNo}
     </select>
+
+    <update id="updateExpireDt" parameterType="long">
+        UPDATE tb_token3
+           SET access_expire_dt = now()
+             , refresh_expire_dt = now()
+         WHERE 1=1
+           AND user_no = #{userNo}
+    </update>
 </mapper>

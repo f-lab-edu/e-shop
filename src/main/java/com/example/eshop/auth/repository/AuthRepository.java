@@ -8,9 +8,13 @@ import org.springframework.stereotype.Repository;
 @Mapper
 @Repository
 public interface AuthRepository {
-    TokenEntity findByTypeAndRandomStr(String type, String randomStr);
     boolean isDuplicatedId(String userId);
     void signin(UserEntity user);
     UserEntity findUserByUserId(String userId);
+    TokenEntity findAccessTokenByUserNo(long userNo);
+    TokenEntity findAccessTokenByRandomToken(String randomToken);
+    TokenEntity findRefreshTokenByRandomToken(String randomToken);
+    void insertToken(TokenEntity token);
     UserEntity findUserByUserNo(long userNo);
+    void updateExpireDt(long userNo);
 }

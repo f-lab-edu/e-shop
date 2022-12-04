@@ -1,23 +1,50 @@
 package com.example.eshop.auth.model;
 
-import com.example.eshop.common.type.TokenType;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
 public class TokenEntity {
+    @Value("${jwt.access.expiration}")
+    private long accessTokenExpiration;
+
+    @Value("${jwt.refresh.expiration}")
+    private long refreshTokenExpiration;
+
+
     private long tokenNo;
+
+    private String userType;
 
     private long userNo;
 
-    private TokenType type;
+    private String randomAccessToken;
 
-    private String randomStr;
+    private LocalDateTime accessExpireDt;
 
-    private LocalDate expireDt;
+    private String randomRefreshToken;
 
-    private LocalDate discardDt;
+    private LocalDateTime refreshExpireDt;
+
+    private LocalDateTime regDt;
+
+    private LocalDateTime updDt;
+
+
+    @Builder
+    public TokenEntity(long userNo,
+                       String randomAccessToken,
+                       String randomRefreshToken) {
+        this.userType = "01";
+        this.userNo = userNo;
+        this.randomAccessToken = randomAccessToken;
+        this.accessExpireDt = LocalDateTime.now().plusSeconds(accessTokenExpiration);
+        this.randomRefreshToken = randomRefreshToken;
+        this.refreshExpireDt = LocalDateTime.now().plusSeconds(refreshTokenExpiration);
+    }
 }
