@@ -134,7 +134,7 @@ public class AuthServiceImpl implements AuthService {
         TokenEntity accessTokenEntity = authRepository.findAccessTokenByRandomToken(accessRandomToken);
 
         int count = 0;
-        while (accessTokenEntity != null || count > 10) {
+        while (accessTokenEntity != null || count < 10) {
             accessRandomToken = jwtUtil.generateRandomString(TokenType.ACCESS);
             accessTokenEntity = authRepository.findAccessTokenByRandomToken(accessRandomToken);
             count += 1;
@@ -148,7 +148,7 @@ public class AuthServiceImpl implements AuthService {
         TokenEntity refreshTokenEntity = authRepository.findRefreshTokenByRandomToken(refreshRandomToken);
 
         int count = 0;
-        while (refreshTokenEntity != null || count > 10) {
+        while (refreshTokenEntity != null || count < 10) {
             refreshRandomToken = jwtUtil.generateRandomString(TokenType.REFRESH);
             refreshTokenEntity = authRepository.findRefreshTokenByRandomToken(refreshRandomToken);
             count += 1;
