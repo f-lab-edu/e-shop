@@ -4,6 +4,7 @@ import com.example.eshop.auth.model.TokenEntity;
 import com.example.eshop.auth.model.UserEntity;
 import com.example.eshop.auth.repository.AuthRepository;
 import com.example.eshop.auth.service.AuthService;
+import com.example.eshop.common.exception.GenerateTokenFailedException;
 import com.example.eshop.common.exception.UserNotFoundException;
 import com.example.eshop.common.type.TokenType;
 import com.example.eshop.common.util.JwtUtil;
@@ -117,6 +118,10 @@ public class AuthServiceImpl implements AuthService {
         String accessRandomToken = generateUniqueAccessRandomToken();
         String refreshRandomToken = generateUniqueRefreshRandomToken();
 
+        if (accessRandomToken == null || refreshRandomToken == null) {
+            throw new GenerateTokenFailedException();
+        }
+
         return new TokenEntity(userNo,
                 accessRandomToken,
                 refreshRandomToken,
@@ -128,9 +133,11 @@ public class AuthServiceImpl implements AuthService {
         String accessRandomToken = jwtUtil.generateRandomString(TokenType.ACCESS);
         TokenEntity accessTokenEntity = authRepository.findAccessTokenByRandomToken(accessRandomToken);
 
-        while (accessTokenEntity != null) {
+        int count = 0;
+        while (accessTokenEntity != null || count > 10) {
             accessRandomToken = jwtUtil.generateRandomString(TokenType.ACCESS);
             accessTokenEntity = authRepository.findAccessTokenByRandomToken(accessRandomToken);
+            count += 1;
         }
 
         return accessRandomToken;
@@ -140,9 +147,11 @@ public class AuthServiceImpl implements AuthService {
         String refreshRandomToken = jwtUtil.generateRandomString(TokenType.REFRESH);
         TokenEntity refreshTokenEntity = authRepository.findRefreshTokenByRandomToken(refreshRandomToken);
 
-        while (refreshTokenEntity != null) {
+        int count = 0;
+        while (refreshTokenEntity != null || count > 10) {
             refreshRandomToken = jwtUtil.generateRandomString(TokenType.REFRESH);
             refreshTokenEntity = authRepository.findRefreshTokenByRandomToken(refreshRandomToken);
+            count += 1;
         }
 
         return refreshRandomToken;
