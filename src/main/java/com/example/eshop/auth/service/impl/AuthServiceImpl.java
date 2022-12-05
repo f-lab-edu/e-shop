@@ -118,7 +118,7 @@ public class AuthServiceImpl implements AuthService {
         String accessRandomToken = generateUniqueAccessRandomToken();
         String refreshRandomToken = generateUniqueRefreshRandomToken();
 
-        if (accessRandomToken == null || refreshRandomToken == null) {
+        if (accessRandomToken.isEmpty() || refreshRandomToken.isEmpty()) {
             throw new GenerateTokenFailedException();
         }
 
@@ -140,7 +140,7 @@ public class AuthServiceImpl implements AuthService {
             count += 1;
         }
 
-        return accessRandomToken;
+        return accessTokenEntity != null ? "" : accessRandomToken;
     }
 
     private String generateUniqueRefreshRandomToken() {
@@ -154,7 +154,7 @@ public class AuthServiceImpl implements AuthService {
             count += 1;
         }
 
-        return refreshRandomToken;
+        return refreshTokenEntity != null ? "" : refreshRandomToken;
     }
 
     private TokenDto getJwtTokenFromRandomToken(TokenEntity token) {
