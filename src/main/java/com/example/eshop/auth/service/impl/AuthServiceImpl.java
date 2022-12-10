@@ -114,6 +114,9 @@ public class AuthServiceImpl implements AuthService {
         String accessRandomToken = generateUniqueAccessRandomToken();
         String refreshRandomToken = generateUniqueRefreshRandomToken();
 
+        LocalDateTime accessTokenExpTime = LocalDateTime.now().plusSeconds(accessTokenExpiration);
+        LocalDateTime refreshTokenExpTime = LocalDateTime.now().plusSeconds(refreshTokenExpiration);
+
         if (accessRandomToken.isEmpty() || refreshRandomToken.isEmpty()) {
             throw new GenerateTokenFailedException();
         }
@@ -121,8 +124,8 @@ public class AuthServiceImpl implements AuthService {
         return new TokenEntity(userNo,
                 accessRandomToken,
                 refreshRandomToken,
-                accessTokenExpiration,
-                refreshTokenExpiration);
+                accessTokenExpTime,
+                refreshTokenExpTime);
     }
 
     private String generateUniqueAccessRandomToken() {

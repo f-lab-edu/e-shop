@@ -30,13 +30,13 @@ public class TokenEntity {
     public TokenEntity(long userNo,
                        String randomAccessToken,
                        String randomRefreshToken,
-                       long accessTokenExpiration,
-                       long refreshTokenExpiration) {
+                       LocalDateTime accessTokenExpiration,
+                       LocalDateTime refreshTokenExpiration) {
         this.userType = "01";
         this.userNo = userNo;
         this.randomAccessToken = randomAccessToken;
-        this.accessExpireDt = LocalDateTime.now().plusSeconds(accessTokenExpiration);
+        this.accessExpireDt = accessTokenExpiration;
         this.randomRefreshToken = randomRefreshToken;
-        this.refreshExpireDt = LocalDateTime.now().plusSeconds(refreshTokenExpiration);
+        this.refreshExpireDt = refreshTokenExpiration;
     }
 }
