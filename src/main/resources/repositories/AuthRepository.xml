@@ -64,7 +64,7 @@
         WHERE 1=1
           AND user_no = #{userNo}
           AND type = 'ACCESS'
-          AND expire_dt <![CDATA[<=]]> now()
+          AND expire_dt <![CDATA[>=]]> now()
     </select>
 
     <select id="findRefreshTokenByGroupNo" parameterType="long" resultType="TokenEntity">
@@ -168,6 +168,6 @@
              , upd_dt = now()
          WHERE 1=1
            AND user_no = #{userNo}
-           AND expire_dt <![CDATA[<=]]> now()
+           AND expire_dt <![CDATA[>=]]> now()
     </update>
 </mapper>
