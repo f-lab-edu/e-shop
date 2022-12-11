@@ -2,6 +2,7 @@ package com.example.eshop.auth.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -14,29 +15,29 @@ public class TokenEntity {
 
     private long userNo;
 
-    private String randomAccessToken;
+    @Setter
+    private long groupNo;
 
-    private LocalDateTime accessExpireDt;
+    private String type;
 
-    private String randomRefreshToken;
+    private String token;
 
-    private LocalDateTime refreshExpireDt;
+    private LocalDateTime expireDt;
 
     private LocalDateTime regDt;
 
     private LocalDateTime updDt;
 
 
-    public TokenEntity(long userNo,
-                       String randomAccessToken,
-                       String randomRefreshToken,
-                       LocalDateTime accessTokenExpiration,
-                       LocalDateTime refreshTokenExpiration) {
-        this.userType = "01";
+    public TokenEntity(String userType,
+                       long userNo,
+                       String type,
+                       String token,
+                       LocalDateTime expireDt) {
+        this.userType = userType;
         this.userNo = userNo;
-        this.randomAccessToken = randomAccessToken;
-        this.accessExpireDt = accessTokenExpiration;
-        this.randomRefreshToken = randomRefreshToken;
-        this.refreshExpireDt = refreshTokenExpiration;
+        this.type = type;
+        this.token = token;
+        this.expireDt = expireDt;
     }
 }

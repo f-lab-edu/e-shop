@@ -12,9 +12,11 @@ public interface AuthRepository {
     void signin(UserEntity user);
     UserEntity findUserByUserId(String userId);
     TokenEntity findAccessTokenByUserNo(long userNo);
+    TokenEntity findRefreshTokenByGroupNo(long groupNo);
     TokenEntity findAccessTokenByRandomToken(String randomToken);
     TokenEntity findRefreshTokenByRandomToken(String randomToken);
-    void insertToken(TokenEntity token);
+    void insertAccessToken(TokenEntity token);
+    void insertRefreshToken(TokenEntity token);
     UserEntity findUserByUserNo(long userNo);
     void updateExpireDt(long userNo);
 }

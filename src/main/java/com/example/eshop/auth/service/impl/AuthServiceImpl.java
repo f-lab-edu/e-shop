@@ -4,7 +4,6 @@ import com.example.eshop.auth.model.TokenEntity;
 import com.example.eshop.auth.model.UserEntity;
 import com.example.eshop.auth.repository.AuthRepository;
 import com.example.eshop.auth.service.AuthService;
-import com.example.eshop.common.exception.GenerateTokenFailedException;
 import com.example.eshop.common.exception.UserNotFoundException;
 import com.example.eshop.common.type.TokenType;
 import com.example.eshop.common.util.JwtUtil;
@@ -58,18 +57,24 @@ public class AuthServiceImpl implements AuthService {
     public TokenDto login(LoginDto loginDto) {
         log.info("login ::: {}", loginDto);
 
-        UserEntity user = getValidatedUserEntity(loginDto);
+        UserEntity user = getAuthenticatedUserEntity(loginDto);
 
         // 기존 토큰 있는지 확인
-        TokenEntity token = authRepository.findAccessTokenByUserNo(user.getUserNo());
-        if (isValid(token)) {
-            return getJwtTokenFromRandomToken(token);
+        TokenEntity accessToken = authRepository.findAccessTokenByUserNo(user.getUserNo());
+        if (isValid(accessToken)) {
+            TokenEntity refreshToken = authRepository
+                    .findRefreshTokenByGroupNo(accessToken.getGroupNo());
+            return getJwtTokenFromRandomToken(accessToken, refreshToken);
         }
 
-        TokenEntity newToken = generateNewTokenEntity(user.getUserNo());
-        authRepository.insertToken(newToken);
+        TokenEntity newAccessToken = generateNewTokenEntity(user.getUserNo(), TokenType.ACCESS);
+        authRepository.insertAccessToken(newAccessToken);
 
-        return getJwtTokenFromRandomToken(newToken);
+        TokenEntity newRefreshToken = generateNewTokenEntity(user.getUserNo(), TokenType.REFRESH);
+        newRefreshToken.setGroupNo(newAccessToken.getGroupNo());
+        authRepository.insertRefreshToken(newRefreshToken);
+
+        return getJwtTokenFromRandomToken(newAccessToken, newRefreshToken);
     }
 
     @Override
@@ -79,13 +84,17 @@ public class AuthServiceImpl implements AuthService {
 
         authRepository.updateExpireDt(userSeq);
 
-        TokenEntity newToken = generateNewTokenEntity(userSeq);
-        authRepository.insertToken(newToken);
+        TokenEntity accessToken = generateNewTokenEntity(userSeq, TokenType.ACCESS);
+        authRepository.insertAccessToken(accessToken);
 
-        return getJwtTokenFromRandomToken(newToken);
+        TokenEntity refreshToken = generateNewTokenEntity(userSeq, TokenType.REFRESH);
+        refreshToken.setGroupNo(accessToken.getGroupNo());
+        authRepository.insertRefreshToken(refreshToken);
+
+        return getJwtTokenFromRandomToken(accessToken, refreshToken);
     }
 
-    private UserEntity getValidatedUserEntity(LoginDto loginDto) {
+    private UserEntity getAuthenticatedUserEntity(LoginDto loginDto) {
         UserEntity user = authRepository.findUserByUserId(loginDto.getId());
         checkUserExist(user);
         checkPasswordEqual(user.getPassword(), loginDto.getPassword());
@@ -106,40 +115,27 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private boolean isValid(TokenEntity tokenEntity) {
-        return tokenEntity != null &&
-                tokenEntity.getAccessExpireDt().isAfter(LocalDateTime.now());
+        return tokenEntity != null;
     }
 
-    private TokenEntity generateNewTokenEntity(long userNo) {
-        String accessRandomToken = generateUniqueAccessRandomToken();
-        String refreshRandomToken = generateUniqueRefreshRandomToken();
+    private TokenEntity generateNewTokenEntity(long userNo, TokenType type) {
+        String randomToken = jwtUtil.generateRandomString(type);
 
-        LocalDateTime accessTokenExpTime = LocalDateTime.now().plusSeconds(accessTokenExpiration);
-        LocalDateTime refreshTokenExpTime = LocalDateTime.now().plusSeconds(refreshTokenExpiration);
+        long expPeriod = TokenType.ACCESS.equals(type) ? accessTokenExpiration : refreshTokenExpiration;
+        LocalDateTime expTime = LocalDateTime.now().plusSeconds(expPeriod);
 
-        if (accessRandomToken.isEmpty() || refreshRandomToken.isEmpty()) {
-            throw new GenerateTokenFailedException();
-        }
-
-        return new TokenEntity(userNo,
-                accessRandomToken,
-                refreshRandomToken,
-                accessTokenExpTime,
-                refreshTokenExpTime);
+        return new TokenEntity("01",
+                userNo,
+                type.name(),
+                randomToken,
+                expTime);
     }
 
-    private String generateUniqueAccessRandomToken() {
-        return jwtUtil.generateRandomString(TokenType.ACCESS);
-    }
-
-    private String generateUniqueRefreshRandomToken() {
-        return jwtUtil.generateRandomString(TokenType.REFRESH);
-    }
-
-    private TokenDto getJwtTokenFromRandomToken(TokenEntity token) {
+    private TokenDto getJwtTokenFromRandomToken(TokenEntity accessToken,
+                                                TokenEntity refreshToken) {
         return new TokenDto(
-                jwtUtil.generate(token.getRandomAccessToken()),
-                jwtUtil.generate(token.getRandomRefreshToken())
+                jwtUtil.generate(accessToken.getToken()),
+                jwtUtil.generate(refreshToken.getToken())
         );
     }
 }

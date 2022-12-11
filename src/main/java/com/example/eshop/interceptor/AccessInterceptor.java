@@ -41,7 +41,7 @@ public class AccessInterceptor extends AuthInterceptor {
         TokenEntity token = authRepository.findAccessTokenByRandomToken(randomToken);
         setTokenEntity(token);
 
-        if (token.getAccessExpireDt().isBefore(LocalDateTime.now())) {
+        if (token.getExpireDt().isBefore(LocalDateTime.now())) {
             throw new TokenExpiredException();
         }
     }

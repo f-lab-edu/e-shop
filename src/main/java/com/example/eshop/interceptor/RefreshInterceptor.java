@@ -41,7 +41,7 @@ public class RefreshInterceptor extends AuthInterceptor {
         TokenEntity token = authRepository.findRefreshTokenByRandomToken(randomToken);
         setTokenEntity(token);
 
-        if (token.getRefreshExpireDt().isBefore(LocalDateTime.now())) {
+        if (token.getExpireDt().isBefore(LocalDateTime.now())) {
             throw new TokenExpiredException();
         }
     }

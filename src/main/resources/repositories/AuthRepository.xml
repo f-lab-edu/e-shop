@@ -55,58 +55,102 @@
     <select id="findAccessTokenByUserNo" parameterType="long" resultType="TokenEntity">
         SELECT token_no
              , user_no
-             , random_access_token
-             , access_expire_dt
+             , group_no
+             , token
+             , expire_dt
              , reg_dt
              , upd_dt
-        FROM tb_token3
+        FROM tb_token2
         WHERE 1=1
           AND user_no = #{userNo}
+          AND type = 'ACCESS'
+          AND expire_dt <![CDATA[<=]]> now()
+    </select>
+
+    <select id="findRefreshTokenByGroupNo" parameterType="long" resultType="TokenEntity">
+        SELECT token_no
+             , user_no
+             , group_no
+             , token
+             , expire_dt
+             , reg_dt
+             , upd_dt
+        FROM tb_token2
+        WHERE 1=1
+          AND group_no = #{groupNo}
+          AND type = 'REFRESH'
     </select>
 
     <select id="findAccessTokenByRandomToken" resultType="TokenEntity">
         SELECT token_no
              , user_no
-             , random_access_token
-             , access_expire_dt
+             , token
+             , expire_dt
              , reg_dt
              , upd_dt
-        FROM tb_token3
+        FROM tb_token2
         WHERE 1=1
-          AND random_access_token = #{randomToken}
+          AND token = #{token}
+          AND type = 'ACCESS'
     </select>
 
     <select id="findRefreshTokenByRandomToken" resultType="TokenEntity">
         SELECT token_no
              , user_no
-             , random_refresh_token
-             , refresh_expire_dt
+             , token
+             , expire_dt
              , reg_dt
              , upd_dt
-        FROM tb_token3
+        FROM tb_token2
         WHERE 1=1
-          AND random_refresh_token = #{randomToken}
+          AND token = #{token}
+          AND type = 'REFRESH'
     </select>
 
-    <insert id="insertToken" parameterType="TokenEntity">
-        INSERT INTO tb_token3 (
+    <insert id="insertAccessToken" parameterType="TokenEntity">
+        <selectKey resultType="long" keyProperty="groupNo" order="BEFORE">
+            SELECT ifnull(MAX(group_no),0) + 1 FROM tb_token2
+        </selectKey>
+        INSERT INTO tb_token2 (
                               user_type
                             , user_no
-                            , random_access_token
-                            , access_expire_dt
-                            , random_refresh_token
-                            , refresh_expire_dt
+                            , group_no
+                            , type
+                            , token
+                            , expire_dt
                             , reg_dt
                             , upd_dt
         ) VALUES (
                     #{userType}
                   , #{userNo}
-                  , #{randomAccessToken}
-                  , #{accessExpireDt}
-                  , #{randomRefreshToken}
-                  , #{refreshExpireDt}
+                  , #{groupNo}
+                  , #{type}
+                  , #{token}
+                  , #{expireDt}
                   , now()
                   , now()
+        )
+    </insert>
+
+    <insert id="insertRefreshToken" parameterType="TokenEntity">
+        INSERT INTO tb_token2 (
+                                user_type
+                                , user_no
+                                , group_no
+                                , type
+                                , token
+                                , expire_dt
+                                , reg_dt
+                                , upd_dt
+        ) VALUES (
+                    #{userType}
+                    , #{userNo}
+                    , #{groupNo}
+                    , #{type}
+                    , #{token}
+                    , #{expireDt}
+                    , now()
+                    , now()
         )
     </insert>
 
@@ -119,10 +163,11 @@
     </select>
 
     <update id="updateExpireDt" parameterType="long">
-        UPDATE tb_token3
-           SET access_expire_dt = now()
-             , refresh_expire_dt = now()
+        UPDATE tb_token2
+           SET expire_dt = now()
+             , upd_dt = now()
          WHERE 1=1
            AND user_no = #{userNo}
+           AND expire_dt <![CDATA[<=]]> now()
     </update>
 </mapper>
