@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 import java.security.Key;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -30,8 +31,11 @@ public class JwtUtil {
 
 
     public String generateRandomString(TokenType type) {
+        String uuid = UUID.randomUUID().toString();
+
         int length = TokenType.ACCESS.equals(type) ? 50 : 55;
-        return RandomUtil.generateString(length);
+        String randomString = RandomUtil.generateString(length-uuid.length()-1);
+        return uuid + "-" + randomString;
     }
 
     public String generate(String randomString) {
