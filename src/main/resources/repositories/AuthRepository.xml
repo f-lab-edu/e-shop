@@ -55,30 +55,27 @@
     <select id="findAccessTokenByUserNo" parameterType="long" resultType="TokenEntity">
         SELECT token_no
              , user_no
-             , group_no
              , token
              , expire_dt
              , reg_dt
              , upd_dt
-        FROM tb_token2
+        FROM tb_token
         WHERE 1=1
           AND user_no = #{userNo}
-          AND type = 'ACCESS'
+          AND linked_token_no is null
           AND expire_dt <![CDATA[>=]]> now()
     </select>
 
-    <select id="findRefreshTokenByGroupNo" parameterType="long" resultType="TokenEntity">
+    <select id="findRefreshTokenByLinkedTokenNo" parameterType="long" resultType="TokenEntity">
         SELECT token_no
              , user_no
-             , group_no
              , token
              , expire_dt
              , reg_dt
              , upd_dt
-        FROM tb_token2
+        FROM tb_token
         WHERE 1=1
-          AND group_no = #{groupNo}
-          AND type = 'REFRESH'
+          AND linked_token_no = #{tokenNo}
     </select>
 
     <select id="findAccessTokenByRandomToken" resultType="TokenEntity">
@@ -88,10 +85,9 @@
              , expire_dt
              , reg_dt
              , upd_dt
-        FROM tb_token2
+        FROM tb_token
         WHERE 1=1
           AND token = #{token}
-          AND type = 'ACCESS'
     </select>
 
     <select id="findRefreshTokenByRandomToken" resultType="TokenEntity">
@@ -101,21 +97,16 @@
              , expire_dt
              , reg_dt
              , upd_dt
-        FROM tb_token2
+        FROM tb_token
         WHERE 1=1
           AND token = #{token}
-          AND type = 'REFRESH'
     </select>
 
     <insert id="insertAccessToken" parameterType="TokenEntity">
-        <selectKey resultType="long" keyProperty="groupNo" order="BEFORE">
-            SELECT ifnull(MAX(group_no),0) + 1 FROM tb_token2
-        </selectKey>
-        INSERT INTO tb_token2 (
+        INSERT INTO tb_token (
                               user_type
                             , user_no
-                            , group_no
-                            , type
+                            , linked_token_no
                             , token
                             , expire_dt
                             , reg_dt
@@ -123,21 +114,22 @@
         ) VALUES (
                     #{userType}
                   , #{userNo}
-                  , #{groupNo}
-                  , #{type}
+                  , null
                   , #{token}
                   , #{expireDt}
                   , now()
                   , now()
         )
+        <selectKey resultType="long" keyProperty="tokenNo" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
     </insert>
 
     <insert id="insertRefreshToken" parameterType="TokenEntity">
-        INSERT INTO tb_token2 (
+        INSERT INTO tb_token (
                                 user_type
                                 , user_no
-                                , group_no
-                                , type
+                                , linked_token_no
                                 , token
                                 , expire_dt
                                 , reg_dt
@@ -145,8 +137,7 @@
         ) VALUES (
                     #{userType}
                     , #{userNo}
-                    , #{groupNo}
-                    , #{type}
+                    , #{linkedTokenNo}
                     , #{token}
                     , #{expireDt}
                     , now()
@@ -163,7 +154,7 @@
     </select>
 
     <update id="updateExpireDt" parameterType="long">
-        UPDATE tb_token2
+        UPDATE tb_token
            SET expire_dt = now()
              , upd_dt = now()
          WHERE 1=1

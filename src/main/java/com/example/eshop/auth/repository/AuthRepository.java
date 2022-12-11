@@ -12,7 +12,7 @@ public interface AuthRepository {
     void signin(UserEntity user);
     UserEntity findUserByUserId(String userId);
     TokenEntity findAccessTokenByUserNo(long userNo);
-    TokenEntity findRefreshTokenByGroupNo(long groupNo);
+    TokenEntity findRefreshTokenByLinkedTokenNo(long tokenNo);
     TokenEntity findAccessTokenByRandomToken(String randomToken);
     TokenEntity findRefreshTokenByRandomToken(String randomToken);
     void insertAccessToken(TokenEntity token);

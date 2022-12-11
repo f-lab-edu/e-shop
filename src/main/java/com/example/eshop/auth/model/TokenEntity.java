@@ -16,9 +16,7 @@ public class TokenEntity {
     private long userNo;
 
     @Setter
-    private long groupNo;
-
-    private String type;
+    private Long linkedTokenNo;
 
     private String token;
 
@@ -31,12 +29,10 @@ public class TokenEntity {
 
     public TokenEntity(String userType,
                        long userNo,
-                       String type,
                        String token,
                        LocalDateTime expireDt) {
         this.userType = userType;
         this.userNo = userNo;
-        this.type = type;
         this.token = token;
         this.expireDt = expireDt;
     }

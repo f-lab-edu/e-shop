@@ -63,7 +63,7 @@ public class AuthServiceImpl implements AuthService {
         TokenEntity accessToken = authRepository.findAccessTokenByUserNo(user.getUserNo());
         if (isValid(accessToken)) {
             TokenEntity refreshToken = authRepository
-                    .findRefreshTokenByGroupNo(accessToken.getGroupNo());
+                    .findRefreshTokenByLinkedTokenNo(accessToken.getTokenNo());
             return getJwtTokenFromRandomToken(accessToken, refreshToken);
         }
 
@@ -71,7 +71,7 @@ public class AuthServiceImpl implements AuthService {
         authRepository.insertAccessToken(newAccessToken);
 
         TokenEntity newRefreshToken = generateNewTokenEntity(user.getUserNo(), TokenType.REFRESH);
-        newRefreshToken.setGroupNo(newAccessToken.getGroupNo());
+        newRefreshToken.setLinkedTokenNo(newAccessToken.getTokenNo());
         authRepository.insertRefreshToken(newRefreshToken);
 
         return getJwtTokenFromRandomToken(newAccessToken, newRefreshToken);
@@ -88,7 +88,7 @@ public class AuthServiceImpl implements AuthService {
         authRepository.insertAccessToken(accessToken);
 
         TokenEntity refreshToken = generateNewTokenEntity(userSeq, TokenType.REFRESH);
-        refreshToken.setGroupNo(accessToken.getGroupNo());
+        refreshToken.setLinkedTokenNo(accessToken.getTokenNo());
         authRepository.insertRefreshToken(refreshToken);
 
         return getJwtTokenFromRandomToken(accessToken, refreshToken);
@@ -126,7 +126,6 @@ public class AuthServiceImpl implements AuthService {
 
         return new TokenEntity("01",
                 userNo,
-                type.name(),
                 randomToken,
                 expTime);
     }
