@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.eshop.auth.repository.AuthRepository">
+    <select id="isDuplicatedId" parameterType="String" resultType="boolean">
+        SELECT EXISTS(SELECT user_id
+                      FROM tb_member
+                      WHERE 1=1
+                        AND user_id=#{userId})
+    </select>
+
+    <insert id="signin" parameterType="UserEntity">
+        INSERT INTO tb_member (
+        user_id
+        , name
+        , join_cd
+        , status
+        , password
+        , tel
+        , post_num
+        , address
+        , noti_yn
+        , noti_agree_dt
+        , last_login_dt
+        , modify_pw_dt
+        , reg_dt
+        , upd_dt
+        )
+        VALUES (
+        #{userId}
+        , #{name}
+        , #{joinCode}
+        , #{status}
+        , #{password}
+        , #{tel}
+        , #{postNum}
+        , #{address}
+        , #{notiYn}
+        , now()
+        , now()
+        , now()
+        , now()
+        , now()
+        )
+    </insert>
+
+    <select id="findUserByUserId" parameterType="String" resultType="UserEntity">
+        SELECT user_no
+             , user_id
+             , password
+        FROM tb_member
+        WHERE 1=1
+          AND user_id = #{userId}
+    </select>
+
+    <select id="findAccessTokenByUserNo" parameterType="long" resultType="TokenEntity">
+        SELECT token_no
+             , user_no
+             , random_access_token
+             , access_expire_dt
+             , reg_dt
+             , upd_dt
+        FROM tb_token3
+        WHERE 1=1
+          AND user_no = #{userNo}
+    </select>
+
+    <select id="findAccessTokenByRandomToken" resultType="TokenEntity">
+        SELECT token_no
+             , user_no
+             , random_access_token
+             , access_expire_dt
+             , reg_dt
+             , upd_dt
+        FROM tb_token3
+        WHERE 1=1
+          AND random_access_token = #{randomToken}
+    </select>
+
+    <select id="findRefreshTokenByRandomToken" resultType="TokenEntity">
+        SELECT token_no
+             , user_no
+             , random_refresh_token
+             , refresh_expire_dt
+             , reg_dt
+             , upd_dt
+        FROM tb_token3
+        WHERE 1=1
+          AND random_refresh_token = #{randomToken}
+    </select>
+
+    <insert id="insertToken" parameterType="TokenEntity">
+        INSERT INTO tb_token3 (
+                              user_type
+                            , user_no
+                            , random_access_token
+                            , access_expire_dt
+                            , random_refresh_token
+                            , refresh_expire_dt
+                            , reg_dt
+                            , upd_dt
+        ) VALUES (
+                    #{userType}
+                  , #{userNo}
+                  , #{randomAccessToken}
+                  , #{accessExpireDt}
+                  , #{randomRefreshToken}
+                  , #{refreshExpireDt}
+                  , now()
+                  , now()
+        )
+    </insert>
+
+    <select id="findUserByUserNo" parameterType="long" resultType="UserEntity">
+        SELECT user_no
+             , user_id
+        FROM tb_member
+        WHERE 1=1
+          AND user_no = #{userNo}
+    </select>
+
+    <update id="updateExpireDt" parameterType="long">
+        UPDATE tb_token3
+           SET access_expire_dt = now()
+             , refresh_expire_dt = now()
+         WHERE 1=1
+           AND user_no = #{userNo}
+    </update>
+</mapper>

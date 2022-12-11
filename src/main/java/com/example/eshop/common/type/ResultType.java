@@ -1,4 +1,4 @@
-package com.example.eshop.common.dto;
+package com.example.eshop.common.type;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -15,9 +15,9 @@ public enum ResultType {
 
     UNKNOWN_USER(HttpStatus.UNAUTHORIZED, "401001", "Unknown user"),
     ACCESS_TOKEN_REQUIRED(HttpStatus.UNAUTHORIZED, "401002", "Access token required"),
-    INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "401003", "Invalid token"),
-    REFRESH_TOKEN_REQUIRED(HttpStatus.UNAUTHORIZED, "401004", "Refresh token required"),
-    EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "401005", "token expired"),
+    REFRESH_TOKEN_REQUIRED(HttpStatus.UNAUTHORIZED, "401003", "Refresh token required"),
+    INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "401004", "Invalid token"),
+    EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "401005", "Token expired"),
     NO_ROLE(HttpStatus.UNAUTHORIZED, "401006", "No Role"),
 
     PAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "404001", "Page not found"),
