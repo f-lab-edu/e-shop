@@ -1,5 +1,6 @@
 package com.example.eshop.auth.repository;
 
+import com.example.eshop.auth.model.TokenEntity;
 import com.example.eshop.auth.model.UserEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,11 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @MybatisTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class AuthRepositoryTest {
+    private static final long accessTokenExpiration = 1800;
+    private static final long refreshTokenExpiration = 604800;
+
     private AuthRepository authRepository;
 
     @Autowired
@@ -54,18 +60,58 @@ class AuthRepositoryTest {
     @DisplayName("findUserByUserId :: 정상 케이스")
     void findUserByUserId() {
         UserEntity user = authRepository.findUserByUserId("hjkim");
-        System.out.println(user.getUserId());
 
         assertEquals("hjkim", user.getUserId());
         assertEquals(1, user.getUserNo());
     }
 
     @Test
-    @DisplayName("findUserByUserNo :: 정상 케이스")
-    void findUserByUserNo() {
-        UserEntity user = authRepository.findUserByUserNo(1);
+    @DisplayName("findAccessTokenByUserNo :: 정상 케이스")
+    void findAccessTokenByUserNo() {
+        TokenEntity token = authRepository.findAccessTokenByUserNo(1);
 
-        assertEquals("hjkim", user.getUserId());
-        assertEquals(1, user.getUserNo());
+        assertEquals(1, token.getUserNo());
+    }
+
+    @Test
+    @DisplayName("findAccessTokenByRandomToken :: 정상 케이스")
+    void findAccessTokenByRandomToken() {
+
+        // TODO : insertToken
+
+        TokenEntity token = authRepository.findAccessTokenByRandomToken("");
+
+        assertEquals(1, token.getUserNo());
+    }
+
+    @Test
+    @DisplayName("findRefreshTokenByRandomToken :: 정상 케이스")
+    void findRefreshTokenByRandomToken() {
+
+        // TODO : insertToken
+
+        TokenEntity token = authRepository.findRefreshTokenByRandomToken("");
+
+        assertEquals(1, token.getUserNo());
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("insertToken :: 정상 케이스")
+    void insertToken() {
+        String accessRandomToken = "accessrandomtokentest";
+        String refreshRandomToken = "refreshrandomtokentest";
+
+        TokenEntity token = new TokenEntity(1,
+                accessRandomToken,
+                refreshRandomToken,
+                LocalDateTime.now().plusSeconds(accessTokenExpiration),
+                LocalDateTime.now().plusSeconds(refreshTokenExpiration));
+
+        authRepository.insertToken(token);
+
+        TokenEntity insertedToken = authRepository.findAccessTokenByRandomToken(accessRandomToken);
+        assertEquals(accessRandomToken, insertedToken.getRandomAccessToken());
+        assertEquals(1, insertedToken.getUserNo());
     }
 }

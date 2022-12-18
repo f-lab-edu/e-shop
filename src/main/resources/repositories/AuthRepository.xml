@@ -110,14 +110,6 @@
         )
     </insert>
 
-    <select id="findUserByUserNo" parameterType="long" resultType="UserEntity">
-        SELECT user_no
-             , user_id
-        FROM tb_member
-        WHERE 1=1
-          AND user_no = #{userNo}
-    </select>
-
     <update id="updateExpireDt" parameterType="long">
         UPDATE tb_token3
            SET access_expire_dt = now()
