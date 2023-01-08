@@ -1,7 +1,6 @@
-package com.example.eshop.auth.repository;
+package com.example.eshop.member.auth.repository;
 
-import com.example.eshop.auth.model.TokenEntity;
-import com.example.eshop.auth.model.UserEntity;
+import com.example.eshop.member.auth.model.TokenEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
@@ -33,45 +32,6 @@ class AuthRepositoryTest {
                 REFRESH_RANDOM_TOKEN,
                 LocalDateTime.now().plusSeconds(ACCESS_TOKEN_EXPIRATION),
                 LocalDateTime.now().plusSeconds(REFRESH_TOKEN_EXPIRATION));
-    }
-
-    @Test
-    @DisplayName("isDuplicatedId :: 정상 케이스")
-    void isDuplicatedId() {
-        boolean isDuplicated = authRepository.isDuplicatedId("hjkim");
-
-        assertTrue(isDuplicated);
-    }
-
-    @Test
-    @Transactional
-    @DisplayName("signin :: 정상 케이스")
-    void signin() {
-        UserEntity user = UserEntity.builder()
-                .userId("hjkimtest")
-                .name("test")
-                .joinCode("01")
-                .password("test")
-                .tel("01012341234")
-                .postNum("000001")
-                .address("Seoul")
-                .notiYn("Y")
-                .build();
-
-        authRepository.signin(user);
-
-        boolean isDuplicated = authRepository.isDuplicatedId("hjkimtest");
-
-        assertTrue(isDuplicated);
-    }
-
-    @Test
-    @DisplayName("findUserByUserId :: 정상 케이스")
-    void findUserByUserId() {
-        UserEntity user = authRepository.findUserByUserId("hjkim");
-
-        assertEquals("hjkim", user.getUserId());
-        assertEquals(1, user.getUserNo());
     }
 
     @Test

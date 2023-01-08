@@ -1,7 +1,7 @@
 package com.example.eshop.interceptor;
 
-import com.example.eshop.auth.model.TokenEntity;
-import com.example.eshop.auth.repository.AuthRepository;
+import com.example.eshop.member.auth.model.TokenEntity;
+import com.example.eshop.member.auth.repository.AuthRepository;
 import com.example.eshop.common.exception.RefreshTokenRequiredException;
 import com.example.eshop.common.exception.TokenExpiredException;
 import com.example.eshop.common.type.TokenType;

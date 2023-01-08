@@ -1,16 +1,16 @@
-package com.example.eshop.auth.service.impl;
+package com.example.eshop.member.auth.service.impl;
 
-import com.example.eshop.auth.model.TokenEntity;
-import com.example.eshop.auth.model.UserEntity;
-import com.example.eshop.auth.repository.AuthRepository;
-import com.example.eshop.auth.service.AuthService;
+import com.example.eshop.member.auth.model.TokenEntity;
+import com.example.eshop.member.core.model.UserEntity;
+import com.example.eshop.member.auth.repository.AuthRepository;
+import com.example.eshop.member.auth.service.AuthService;
 import com.example.eshop.common.exception.GenerateTokenFailedException;
 import com.example.eshop.common.exception.UserNotFoundException;
 import com.example.eshop.common.type.TokenType;
 import com.example.eshop.common.util.JwtUtil;
 import com.example.eshop.controller.dto.LoginDto;
 import com.example.eshop.controller.dto.TokenDto;
-import com.example.eshop.controller.dto.UserDto;
+import com.example.eshop.member.core.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,35 +24,11 @@ import java.time.LocalDateTime;
 public class AuthServiceImpl implements AuthService {
 
     private final JwtUtil jwtUtil;
+    private final MemberService memberService;
     private final AuthRepository authRepository;
 
     private static final long accessTokenExpiration = 1800;
     private static final long refreshTokenExpiration = 604800;
-
-    @Override
-    public boolean isDuplicatedId(String id) {
-        log.info("isDuplicatedId ::: {}", id);
-        return authRepository.isDuplicatedId(id);
-    }
-
-    @Override
-    @Transactional
-    public void signin(UserDto userDto) {
-        log.info("signin ::: {}", userDto);
-
-        UserEntity user = UserEntity.builder()
-                .userId(userDto.getId())
-                .name(userDto.getName())
-                .joinCode(userDto.getJoinCode())
-                .password(userDto.getPassword())
-                .tel(userDto.getContact())
-                .postNum(userDto.getPostNumber())
-                .address(userDto.getAddress())
-                .notiYn(userDto.getNotiYn())
-                .build();
-
-        authRepository.signin(user);
-    }
 
     @Override
     @Transactional
@@ -84,17 +60,9 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private UserEntity getValidatedUserEntity(LoginDto loginDto) {
-        UserEntity user = authRepository.findUserByUserId(loginDto.getId());
-        checkUserExist(user);
+        UserEntity user = memberService.getUserByUserId(loginDto.getId());
         checkPasswordEqual(user.getPassword(), loginDto.getPassword());
-
         return user;
-    }
-
-    private void checkUserExist(UserEntity user) {
-        if (user == null) {
-            throw new UserNotFoundException();
-        }
     }
 
     private void checkPasswordEqual(String rawPassword, String requestPassword) {

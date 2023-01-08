@@ -1,4 +1,4 @@
-package com.example.eshop.auth.model;
+package com.example.eshop.member.auth.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
