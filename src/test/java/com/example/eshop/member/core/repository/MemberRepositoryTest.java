@@ -59,4 +59,13 @@ class MemberRepositoryTest {
         assertEquals("hjkim", user.getUserId());
         assertEquals(1, user.getUserNo());
     }
+
+    @Test
+    @DisplayName("findUserByUserNo :: 정상 케이스")
+    void findUserByUserNo() {
+        UserEntity user = memberRepository.findUserByUserNo(1);
+
+        assertEquals("hjkim", user.getUserId());
+        assertEquals(1, user.getUserNo());
+    }
 }

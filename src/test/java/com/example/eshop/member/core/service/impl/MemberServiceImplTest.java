@@ -51,4 +51,14 @@ public class MemberServiceImplTest {
         assertEquals(1, selected.getUserNo());
         assertEquals("hjkim", selected.getUserId());
     }
+
+    @Test
+    @DisplayName("getUserByUserNo :: 유저번호로 유저정보 조회")
+    void getUserByUserNo() {
+        UserEntity selected = memberService.getUserByUserNo(1);
+
+        assertInstanceOf(UserEntity.class, selected);
+        assertEquals(1, selected.getUserNo());
+        assertEquals("hjkim", selected.getUserId());
+    }
 }

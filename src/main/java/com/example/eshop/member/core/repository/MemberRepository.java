@@ -10,4 +10,5 @@ public interface MemberRepository {
     boolean isDuplicatedId(String userId);
     void insertUserEntity(UserEntity user);
     UserEntity findUserByUserId(String userId);
+    UserEntity findUserByUserNo(long userNo);
 }

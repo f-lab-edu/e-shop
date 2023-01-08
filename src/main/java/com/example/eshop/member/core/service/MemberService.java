@@ -7,4 +7,5 @@ public interface MemberService {
     boolean isDuplicatedId(String id);
     void signin(UserDto userDto);
     UserEntity getUserByUserId(String userId);
+    UserEntity getUserByUserNo(long userNo);
 }

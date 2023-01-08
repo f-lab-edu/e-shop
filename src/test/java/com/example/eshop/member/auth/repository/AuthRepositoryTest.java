@@ -47,7 +47,7 @@ class AuthRepositoryTest {
     @DisplayName("findAccessTokenByRandomToken :: 정상 케이스")
     void findAccessTokenByRandomToken() {
 
-        authRepository.upsertToken(token);
+        authRepository.insertToken(token);
 
         TokenEntity insertedToken = authRepository.findAccessTokenByRandomToken(ACCESS_RANDOM_TOKEN);
 
@@ -60,7 +60,7 @@ class AuthRepositoryTest {
     @DisplayName("findRefreshTokenByRandomToken :: 정상 케이스")
     void findRefreshTokenByRandomToken() {
 
-        authRepository.upsertToken(token);
+        authRepository.insertToken(token);
 
         TokenEntity insertedToken = authRepository.findRefreshTokenByRandomToken(REFRESH_RANDOM_TOKEN);
 
@@ -72,7 +72,7 @@ class AuthRepositoryTest {
     @Transactional
     @DisplayName("upsertToken :: 정상 케이스")
     void upsertToken() {
-        authRepository.upsertToken(token);
+        authRepository.insertToken(token);
 
         TokenEntity insertedToken = authRepository.findAccessTokenByRandomToken(ACCESS_RANDOM_TOKEN);
 

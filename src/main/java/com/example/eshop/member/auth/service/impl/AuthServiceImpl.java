@@ -1,5 +1,7 @@
 package com.example.eshop.member.auth.service.impl;
 
+import com.example.eshop.common.exception.InvalidTokenException;
+import com.example.eshop.common.exception.TokenExpiredException;
 import com.example.eshop.member.auth.model.TokenEntity;
 import com.example.eshop.member.core.model.UserEntity;
 import com.example.eshop.member.auth.repository.AuthRepository;
@@ -43,7 +45,12 @@ public class AuthServiceImpl implements AuthService {
         }
 
         TokenEntity newToken = generateNewTokenEntity(user.getUserNo());
-        authRepository.upsertToken(newToken);
+
+        if (token != null) {
+            updateToken(token, newToken);
+        } else {
+            authRepository.insertToken(newToken);
+        }
 
         return getJwtTokenFromRandomToken(newToken);
     }
@@ -53,11 +60,24 @@ public class AuthServiceImpl implements AuthService {
     public TokenDto refreshToken(long userSeq) {
         log.info("refreshToken ::: {}", userSeq);
 
+        TokenEntity token = authRepository.findAccessTokenByUserNo(userSeq);
         TokenEntity newToken = generateNewTokenEntity(userSeq);
-        authRepository.upsertToken(newToken);
+
+        updateToken(token, newToken);
 
         return getJwtTokenFromRandomToken(newToken);
     }
+
+    @Override
+    public TokenEntity getAccessToken(String randomToken) {
+        log.info("getAccessToken ::: {}", randomToken);
+
+        TokenEntity token = authRepository.findAccessTokenByRandomToken(randomToken);
+        validateTokenEntity(token);
+
+        return token;
+    }
+
 
     private UserEntity getValidatedUserEntity(LoginDto loginDto) {
         UserEntity user = memberService.getUserByUserId(loginDto.getId());
@@ -74,6 +94,16 @@ public class AuthServiceImpl implements AuthService {
     private boolean isValid(TokenEntity tokenEntity) {
         return tokenEntity != null &&
                 tokenEntity.getAccessExpireDt().isAfter(LocalDateTime.now());
+    }
+
+    private void validateTokenEntity(TokenEntity tokenEntity) {
+        if (tokenEntity == null) {
+            throw new InvalidTokenException();
+        }
+
+        if (tokenEntity.getAccessExpireDt().isBefore(LocalDateTime.now())) {
+            throw new TokenExpiredException();
+        }
     }
 
     private TokenEntity generateNewTokenEntity(long userNo) {
@@ -107,5 +137,14 @@ public class AuthServiceImpl implements AuthService {
                 jwtUtil.generate(token.getRandomAccessToken()),
                 jwtUtil.generate(token.getRandomRefreshToken())
         );
+    }
+
+    private void updateToken(TokenEntity token, TokenEntity newToken) {
+        token.setRandomAccessToken(newToken.getRandomAccessToken());
+        token.setAccessExpireDt(newToken.getAccessExpireDt());
+        token.setRandomRefreshToken(newToken.getRandomRefreshToken());
+        token.setRefreshExpireDt(newToken.getRefreshExpireDt());
+
+        authRepository.updateToken(token);
     }
 }

@@ -49,6 +49,13 @@ public class MemberServiceImpl implements MemberService {
         return user;
     }
 
+    @Override
+    public UserEntity getUserByUserNo(long userNo) {
+        UserEntity user = memberRepository.findUserByUserNo(userNo);
+        checkUserExist(user);
+        return user;
+    }
+
 
     private void checkUserExist(UserEntity user) {
         if (user == null) {
