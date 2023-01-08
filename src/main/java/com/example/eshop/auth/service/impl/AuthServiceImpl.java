@@ -36,6 +36,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public void signin(UserDto userDto) {
         log.info("signin ::: {}", userDto);
 
@@ -60,14 +61,13 @@ public class AuthServiceImpl implements AuthService {
 
         UserEntity user = getValidatedUserEntity(loginDto);
 
-        // 기존 토큰 있는지 확인
         TokenEntity token = authRepository.findAccessTokenByUserNo(user.getUserNo());
         if (isValid(token)) {
             return getJwtTokenFromRandomToken(token);
         }
 
         TokenEntity newToken = generateNewTokenEntity(user.getUserNo());
-        authRepository.insertToken(newToken);
+        authRepository.upsertToken(newToken);
 
         return getJwtTokenFromRandomToken(newToken);
     }
@@ -77,10 +77,8 @@ public class AuthServiceImpl implements AuthService {
     public TokenDto refreshToken(long userSeq) {
         log.info("refreshToken ::: {}", userSeq);
 
-        authRepository.updateExpireDt(userSeq);
-
         TokenEntity newToken = generateNewTokenEntity(userSeq);
-        authRepository.insertToken(newToken);
+        authRepository.upsertToken(newToken);
 
         return getJwtTokenFromRandomToken(newToken);
     }

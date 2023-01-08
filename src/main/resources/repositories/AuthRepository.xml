@@ -88,7 +88,7 @@
           AND random_refresh_token = #{randomToken}
     </select>
 
-    <insert id="insertToken" parameterType="TokenEntity">
+    <insert id="upsertToken" parameterType="TokenEntity">
         INSERT INTO tb_token3 (
                               user_type
                             , user_no
@@ -108,13 +108,12 @@
                   , now()
                   , now()
         )
+        ON DUPLICATE KEY
+        UPDATE
+              random_access_token = #{randomAccessToken}
+            , access_expire_dt = now()
+            , random_refresh_token = #{randomRefreshToken}
+            , refresh_expire_dt = now()
+            , upd_dt = now()
     </insert>
-
-    <update id="updateExpireDt" parameterType="long">
-        UPDATE tb_token3
-           SET access_expire_dt = now()
-             , refresh_expire_dt = now()
-         WHERE 1=1
-           AND user_no = #{userNo}
-    </update>
 </mapper>
