@@ -73,7 +73,17 @@ public class AuthServiceImpl implements AuthService {
         log.info("getAccessToken ::: {}", randomToken);
 
         TokenEntity token = authRepository.findAccessTokenByRandomToken(randomToken);
-        validateTokenEntity(token);
+        validateAccessTokenEntity(token);
+
+        return token;
+    }
+
+    @Override
+    public TokenEntity getRefreshToken(String randomToken) {
+        log.info("getRefreshToken ::: {}", randomToken);
+
+        TokenEntity token = authRepository.findRefreshTokenByRandomToken(randomToken);
+        validateRefreshTokenEntity(token);
 
         return token;
     }
@@ -96,12 +106,22 @@ public class AuthServiceImpl implements AuthService {
                 tokenEntity.getAccessExpireDt().isAfter(LocalDateTime.now());
     }
 
-    private void validateTokenEntity(TokenEntity tokenEntity) {
+    private void validateAccessTokenEntity(TokenEntity tokenEntity) {
         if (tokenEntity == null) {
             throw new InvalidTokenException();
         }
 
         if (tokenEntity.getAccessExpireDt().isBefore(LocalDateTime.now())) {
+            throw new TokenExpiredException();
+        }
+    }
+
+    private void validateRefreshTokenEntity(TokenEntity tokenEntity) {
+        if (tokenEntity == null) {
+            throw new InvalidTokenException();
+        }
+
+        if (tokenEntity.getRefreshExpireDt().isBefore(LocalDateTime.now())) {
             throw new TokenExpiredException();
         }
     }

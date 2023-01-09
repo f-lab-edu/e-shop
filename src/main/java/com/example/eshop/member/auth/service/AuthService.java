@@ -8,4 +8,5 @@ public interface AuthService {
     TokenDto login(LoginDto loginDto);
     TokenDto refreshToken(long userSeq);
     TokenEntity getAccessToken(String randomToken);
+    TokenEntity getRefreshToken(String randomToken);
 }

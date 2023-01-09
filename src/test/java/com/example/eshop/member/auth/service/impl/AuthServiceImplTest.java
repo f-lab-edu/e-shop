@@ -58,4 +58,17 @@ class AuthServiceImplTest {
         assertInstanceOf(TokenEntity.class, token);
         assertEquals(1, token.getUserNo());
     }
+
+    @Test
+    @Transactional
+    @DisplayName("getRefreshToken :: 정상 케이스")
+    void getRefreshToken() {
+        TokenDto tokenDto = authService.login(loginDto);
+        String randomToken = jwtUtil.getRandomToken(tokenDto.getRefreshToken());
+
+        TokenEntity token = authService.getRefreshToken(randomToken);
+
+        assertInstanceOf(TokenEntity.class, token);
+        assertEquals(1, token.getUserNo());
+    }
 }
