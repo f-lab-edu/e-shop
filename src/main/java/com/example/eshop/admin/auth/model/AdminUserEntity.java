@@ -1,42 +1,31 @@
-package com.example.eshop.auth.model;
+package com.example.eshop.admin.auth.model;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
-public class UserEntity {
-    private long userNo;
+public class AdminUserEntity {
+    private long adminNo;
 
-    private String userId;
+    private String adminId;
 
-    @Setter
     private String name;
-
-    private String joinCode;
 
     private String status;
 
-    @Setter
+    private String levelCd;
+
     private String password;
 
-    @Setter
     private String tel;
 
-    @Setter
     private String postNum;
 
-    @Setter
     private String address;
-
-    @Setter
-    private String notiYn;
-
-    private LocalDate notiAgreeDt;
 
     private LocalDate lastLoginDt;
 
@@ -46,19 +35,17 @@ public class UserEntity {
 
     private LocalDate updDt;
 
-
     @Builder
-    public UserEntity(String userId, String name, String joinCode,
-                      String password, String tel, String postNum,
-                      String address, String notiYn) {
-        this.userId = userId;
+    public AdminUserEntity(String adminId, String name, String levelCd,
+                           String password, String tel, String postNum,
+                           String address) {
+        this.adminId = adminId;
         this.name = name;
-        this.joinCode = joinCode;
         this.status = "0";
+        this.levelCd = levelCd;
         this.password = password;
         this.tel = tel;
         this.postNum = postNum;
         this.address = address;
-        this.notiYn = notiYn;
     }
 }

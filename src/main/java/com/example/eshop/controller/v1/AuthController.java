@@ -1,9 +1,9 @@
 package com.example.eshop.controller.v1;
 
 import com.example.eshop.auth.service.AuthService;
+import com.example.eshop.controller.dto.BuyerUserDto;
 import com.example.eshop.controller.dto.LoginDto;
 import com.example.eshop.controller.dto.TokenDto;
-import com.example.eshop.controller.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -34,13 +34,13 @@ public class AuthController {
      * 회원가입
      *
      * @author hjkim
-     * @param userDto
+     * @param buyerUserDto
      */
     @PostMapping(value="/signin")
-    public void signin(@Valid @RequestBody UserDto userDto) {
-        log.info("signin ::: {}", userDto);
+    public void signin(@Valid @RequestBody BuyerUserDto buyerUserDto) {
+        log.info("signin ::: {}", buyerUserDto);
 
-        authService.signin(userDto);
+        authService.signin(buyerUserDto);
     }
 
     /**

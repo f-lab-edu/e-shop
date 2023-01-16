@@ -8,9 +8,9 @@ import com.example.eshop.common.exception.GenerateTokenFailedException;
 import com.example.eshop.common.exception.UserNotFoundException;
 import com.example.eshop.common.type.TokenType;
 import com.example.eshop.common.util.JwtUtil;
+import com.example.eshop.controller.dto.BuyerUserDto;
 import com.example.eshop.controller.dto.LoginDto;
 import com.example.eshop.controller.dto.TokenDto;
-import com.example.eshop.controller.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -36,18 +36,18 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void signin(UserDto userDto) {
-        log.info("signin ::: {}", userDto);
+    public void signin(BuyerUserDto buyerUserDto) {
+        log.info("signin ::: {}", buyerUserDto);
 
         UserEntity user = UserEntity.builder()
-                .userId(userDto.getId())
-                .name(userDto.getName())
-                .joinCode(userDto.getJoinCode())
-                .password(userDto.getPassword())
-                .tel(userDto.getContact())
-                .postNum(userDto.getPostNumber())
-                .address(userDto.getAddress())
-                .notiYn(userDto.getNotiYn())
+                .userId(buyerUserDto.getId())
+                .name(buyerUserDto.getName())
+                .joinCode(buyerUserDto.getJoinCode())
+                .password(buyerUserDto.getPassword())
+                .tel(buyerUserDto.getContact())
+                .postNum(buyerUserDto.getPostNumber())
+                .address(buyerUserDto.getAddress())
+                .notiYn(buyerUserDto.getNotiYn())
                 .build();
 
         authRepository.signin(user);
