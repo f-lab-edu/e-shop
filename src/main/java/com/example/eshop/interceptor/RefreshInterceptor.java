@@ -1,11 +1,11 @@
 package com.example.eshop.interceptor;
 
-import com.example.eshop.member.auth.model.TokenEntity;
+import com.example.eshop.auth.model.TokenEntity;
 import com.example.eshop.common.exception.RefreshTokenRequiredException;
 import com.example.eshop.common.exception.TokenExpiredException;
 import com.example.eshop.common.type.TokenType;
 import com.example.eshop.common.util.JwtUtil;
-import com.example.eshop.member.auth.service.AuthService;
+import com.example.eshop.auth.service.AuthService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 

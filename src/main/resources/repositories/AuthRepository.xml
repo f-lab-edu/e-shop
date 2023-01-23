@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.eshop.member.auth.repository.AuthRepository">
+<mapper namespace="com.example.eshop.auth.repository.AuthRepository">
     <select id="findAccessTokenByUserNo" parameterType="long" resultType="TokenEntity">
         SELECT token_no
              , user_no
@@ -12,6 +12,19 @@
         WHERE 1=1
           AND user_no = #{userNo}
           AND user_type = '01'
+    </select>
+
+    <select id="findAccessTokenByAdminNo" parameterType="long" resultType="TokenEntity">
+        SELECT token_no
+             , user_no
+             , random_access_token
+             , access_expire_dt
+             , reg_dt
+             , upd_dt
+        FROM tb_token3
+        WHERE 1=1
+          AND user_no = #{adminNo}
+          AND user_type = '02'
     </select>
 
     <select id="findAccessTokenByRandomToken" resultType="TokenEntity">

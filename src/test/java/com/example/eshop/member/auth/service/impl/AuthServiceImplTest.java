@@ -1,9 +1,10 @@
 package com.example.eshop.member.auth.service.impl;
 
+import com.example.eshop.auth.service.impl.AuthServiceImpl;
 import com.example.eshop.common.util.JwtUtil;
 import com.example.eshop.controller.dto.LoginDto;
 import com.example.eshop.controller.dto.TokenDto;
-import com.example.eshop.member.auth.model.TokenEntity;
+import com.example.eshop.auth.model.TokenEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,7 @@ class AuthServiceImplTest {
     @Transactional
     @DisplayName("refreshToken :: 정상 케이스")
     void refreshToken() {
-        TokenDto tokenDto = authService.refreshToken(1);
+        TokenDto tokenDto = authService.refreshToken(1, "01");
 
         assertInstanceOf(TokenDto.class, tokenDto);
         assertNotNull(tokenDto.getAccessToken());

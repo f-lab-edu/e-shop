@@ -1,11 +1,13 @@
-package com.example.eshop.member.auth.service.impl;
+package com.example.eshop.auth.service.impl;
 
+import com.example.eshop.admin.member.core.model.AdminUserEntity;
+import com.example.eshop.admin.member.core.service.AdminMemberService;
 import com.example.eshop.common.exception.InvalidTokenException;
 import com.example.eshop.common.exception.TokenExpiredException;
-import com.example.eshop.member.auth.model.TokenEntity;
+import com.example.eshop.auth.model.TokenEntity;
 import com.example.eshop.member.core.model.BuyerUserEntity;
-import com.example.eshop.member.auth.repository.AuthRepository;
-import com.example.eshop.member.auth.service.AuthService;
+import com.example.eshop.auth.repository.AuthRepository;
+import com.example.eshop.auth.service.AuthService;
 import com.example.eshop.common.exception.GenerateTokenFailedException;
 import com.example.eshop.common.exception.UserNotFoundException;
 import com.example.eshop.common.type.TokenType;
@@ -27,6 +29,7 @@ public class AuthServiceImpl implements AuthService {
 
     private final JwtUtil jwtUtil;
     private final MemberService memberService;
+    private final AdminMemberService adminMemberService;
     private final AuthRepository authRepository;
 
     private static final long accessTokenExpiration = 1800;
@@ -44,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
             return getJwtTokenFromRandomToken(token);
         }
 
-        TokenEntity newToken = generateNewTokenEntity(user.getUserNo());
+        TokenEntity newToken = generateNewTokenEntity(user.getUserNo(), "01");
 
         if (token != null) {
             updateToken(token, newToken);
@@ -57,11 +60,34 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public TokenDto refreshToken(long userSeq) {
+    public TokenDto adminLogin(LoginDto loginDto) {
+        log.info("adminLogin ::: {}", loginDto);
+
+        AdminUserEntity user = getValidatedAdminUserEntity(loginDto);
+
+        TokenEntity token = authRepository.findAccessTokenByAdminNo(user.getAdminNo());
+        if (isValid(token)) {
+            return getJwtTokenFromRandomToken(token);
+        }
+
+        TokenEntity newToken = generateNewTokenEntity(user.getAdminNo(), "02");
+
+        if (token != null) {
+            updateToken(token, newToken);
+        } else {
+            authRepository.insertToken(newToken);
+        }
+
+        return getJwtTokenFromRandomToken(newToken);
+    }
+
+    @Override
+    @Transactional
+    public TokenDto refreshToken(long userSeq, String userType) {
         log.info("refreshToken ::: {}", userSeq);
 
         TokenEntity token = authRepository.findAccessTokenByUserNo(userSeq);
-        TokenEntity newToken = generateNewTokenEntity(userSeq);
+        TokenEntity newToken = generateNewTokenEntity(userSeq, userType);
 
         updateToken(token, newToken);
 
@@ -92,6 +118,13 @@ public class AuthServiceImpl implements AuthService {
     private BuyerUserEntity getValidatedUserEntity(LoginDto loginDto) {
         BuyerUserEntity user = memberService.getUserByUserId(loginDto.getId());
         checkPasswordEqual(user.getPassword(), loginDto.getPassword());
+        return user;
+    }
+
+    private AdminUserEntity getValidatedAdminUserEntity(LoginDto loginDto) {
+        AdminUserEntity user = adminMemberService.getAdminUserByAdminId(loginDto.getId());
+        checkPasswordEqual(user.getPassword(), loginDto.getPassword());
+
         return user;
     }
 
@@ -126,7 +159,7 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
-    private TokenEntity generateNewTokenEntity(long userNo) {
+    private TokenEntity generateNewTokenEntity(long userNo, String userType) {
         String accessRandomToken = generateUniqueAccessRandomToken();
         String refreshRandomToken = generateUniqueRefreshRandomToken();
 
@@ -138,6 +171,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         return new TokenEntity(userNo,
+                userType,
                 accessRandomToken,
                 refreshRandomToken,
                 accessTokenExpTime,

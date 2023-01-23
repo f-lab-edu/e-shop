@@ -2,7 +2,7 @@ package com.example.eshop.controller.v1.admin;
 
 import com.example.eshop.aop.admin.Admin;
 import com.example.eshop.aop.admin.RefreshTokenCheck;
-import com.example.eshop.admin.member.auth.service.AdminAuthService;
+import com.example.eshop.auth.service.AuthService;
 import com.example.eshop.controller.dto.AdminUserDto;
 import com.example.eshop.controller.dto.LoginDto;
 import com.example.eshop.controller.dto.TokenDto;
@@ -19,7 +19,7 @@ import javax.validation.Valid;
 @RequestMapping(value="/v1/admin/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    private final AdminAuthService adminAuthService;
+    private final AuthService authService;
     private final AdminMemberService adminMemberService;
 
     /**
@@ -58,7 +58,7 @@ public class AuthController {
     public TokenDto login(@Valid @RequestBody LoginDto loginDto) {
         log.info("login ::: {}", loginDto);
 
-        return adminAuthService.login(loginDto);
+        return authService.adminLogin(loginDto);
     }
 
     /**
@@ -81,6 +81,6 @@ public class AuthController {
     public TokenDto refreshToken(@Admin AdminUserEntity admin) {
         log.info("refreshToken ::: {}", admin);
 
-        return adminAuthService.refreshToken(admin.getAdminNo());
+        return authService.refreshToken(admin.getAdminNo(), "02");
     }
 }

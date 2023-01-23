@@ -1,10 +1,10 @@
 package com.example.eshop.aop.admin;
 
+import com.example.eshop.auth.model.TokenEntity;
+import com.example.eshop.auth.service.AuthService;
 import com.example.eshop.common.exception.RefreshTokenRequiredException;
 import com.example.eshop.common.type.TokenType;
 import com.example.eshop.common.util.JwtUtil;
-import com.example.eshop.admin.member.auth.model.AdminTokenEntity;
-import com.example.eshop.admin.member.auth.service.AdminAuthService;
 import com.example.eshop.admin.member.core.model.AdminUserEntity;
 import com.example.eshop.admin.member.core.service.AdminMemberService;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ import java.lang.reflect.Method;
 @RequiredArgsConstructor
 public class RefreshTokenCheckAspect {
     private final JwtUtil jwtUtil;
-    private final AdminAuthService authService;
+    private final AuthService authService;
     private final AdminMemberService memberService;
 
     @Around(value = "@annotation(refreshTokenCheck)")
@@ -35,9 +35,9 @@ public class RefreshTokenCheckAspect {
 
         String randomToken = jwtUtil.getRandomToken(token);
 
-        AdminTokenEntity adminToken = authService.getRefreshToken(randomToken);
+        TokenEntity tokenEntity = authService.getRefreshToken(randomToken);
 
-        AdminUserEntity user = memberService.getAdminUserByUserNo(adminToken.getUserNo());
+        AdminUserEntity user = memberService.getAdminUserByUserNo(tokenEntity.getUserNo());
 
         Method method = MethodSignature.class.cast(pjp.getSignature()).getMethod();
         Object[] args = pjp.getArgs();
