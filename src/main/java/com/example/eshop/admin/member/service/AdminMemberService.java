@@ -1,6 +1,6 @@
-package com.example.eshop.member.core.service;
+package com.example.eshop.admin.member.service;
 
-import com.example.eshop.member.core.model.AdminUserEntity;
+import com.example.eshop.admin.member.model.AdminUserEntity;
 import com.example.eshop.controller.dto.AdminUserDto;
 
 public interface AdminMemberService {

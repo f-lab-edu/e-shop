@@ -1,6 +1,6 @@
-package com.example.eshop.member.core.repository;
+package com.example.eshop.admin.member.repository;
 
-import com.example.eshop.member.core.model.AdminUserEntity;
+import com.example.eshop.admin.member.model.AdminUserEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
