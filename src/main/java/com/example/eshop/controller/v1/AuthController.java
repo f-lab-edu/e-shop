@@ -1,9 +1,9 @@
 package com.example.eshop.controller.v1;
 
+import com.example.eshop.controller.dto.BuyerUserDto;
 import com.example.eshop.member.auth.service.AuthService;
 import com.example.eshop.controller.dto.LoginDto;
 import com.example.eshop.controller.dto.TokenDto;
-import com.example.eshop.controller.dto.UserDto;
 import com.example.eshop.member.core.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

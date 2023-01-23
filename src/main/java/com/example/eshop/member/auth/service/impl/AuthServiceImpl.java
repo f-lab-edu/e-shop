@@ -3,7 +3,7 @@ package com.example.eshop.member.auth.service.impl;
 import com.example.eshop.common.exception.InvalidTokenException;
 import com.example.eshop.common.exception.TokenExpiredException;
 import com.example.eshop.member.auth.model.TokenEntity;
-import com.example.eshop.member.core.model.UserEntity;
+import com.example.eshop.member.core.model.BuyerUserEntity;
 import com.example.eshop.member.auth.repository.AuthRepository;
 import com.example.eshop.member.auth.service.AuthService;
 import com.example.eshop.common.exception.GenerateTokenFailedException;
@@ -37,7 +37,7 @@ public class AuthServiceImpl implements AuthService {
     public TokenDto login(LoginDto loginDto) {
         log.info("login ::: {}", loginDto);
 
-        UserEntity user = getValidatedUserEntity(loginDto);
+        BuyerUserEntity user = getValidatedUserEntity(loginDto);
 
         TokenEntity token = authRepository.findAccessTokenByUserNo(user.getUserNo());
         if (isValid(token)) {
@@ -89,8 +89,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
 
-    private UserEntity getValidatedUserEntity(LoginDto loginDto) {
-        UserEntity user = memberService.getUserByUserId(loginDto.getId());
+    private BuyerUserEntity getValidatedUserEntity(LoginDto loginDto) {
+        BuyerUserEntity user = memberService.getUserByUserId(loginDto.getId());
         checkPasswordEqual(user.getPassword(), loginDto.getPassword());
         return user;
     }

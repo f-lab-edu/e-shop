@@ -9,7 +9,13 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class BuyerUserDto extends UserDto {
+public class BuyerUserDto {
+    private String id;
+    private String name;
     private String joinCode;
+    private String password;
+    private String contact;
+    private String postNumber;
+    private String address;
     private String notiYn;
 }

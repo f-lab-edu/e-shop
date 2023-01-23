@@ -9,6 +9,12 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdminUserDto extends UserDto {
+public class AdminUserDto {
+    private String id;
+    private String name;
     private String levelCode;
+    private String password;
+    private String contact;
+    private String postNumber;
+    private String address;
 }

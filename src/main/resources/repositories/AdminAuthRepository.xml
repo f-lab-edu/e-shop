@@ -1,50 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.eshop.admin.auth.repository.AdminAuthRepository">
-    <select id="isDuplicatedId" parameterType="String" resultType="boolean">
-        SELECT EXISTS(SELECT admin_id
-                      FROM tb_admin
-                      WHERE 1=1
-                        AND admin_id=#{adminId})
+<mapper namespace="com.example.eshop.member.auth.repository.AdminAuthRepository">
+    <select id="findAccessTokenByUserNo" parameterType="long" resultType="AdminTokenEntity">
+        SELECT token_no
+             , user_no
+             , random_access_token
+             , access_expire_dt
+             , reg_dt
+             , upd_dt
+        FROM tb_token3
+        WHERE 1=1
+          AND user_no = #{adminNo}
+          AND user_type = '02'
     </select>
 
-    <insert id="signin" parameterType="AdminUserEntity">
-        INSERT INTO tb_admin (
-                                admin_id
-                              , name
-                              , status
-                              , level_cd
-                              , password
-                              , tel
-                              , post_num
-                              , address
-                              , last_login_dt
-                              , modify_pw_dt
+    <insert id="insertAdminToken" parameterType="AdminTokenEntity">
+        INSERT INTO tb_token3 (
+                                user_type
+                              , user_no
+                              , random_access_token
+                              , access_expire_dt
+                              , random_refresh_token
+                              , refresh_expire_dt
                               , reg_dt
                               , upd_dt
-        )
-        VALUES (
-                   #{adminId}
-               , #{name}
-               , #{status}
-               , #{levelCd}
-               , #{password}
-               , #{tel}
-               , #{postNum}
-               , #{address}
-               , now()
-               , now()
-               , now()
-               , now()
-               )
+        ) VALUES (
+                   #{userType}
+                 , #{userNo}
+                 , #{randomAccessToken}
+                 , #{accessExpireDt}
+                 , #{randomRefreshToken}
+                 , #{refreshExpireDt}
+                 , now()
+                 , now()
+                 )
     </insert>
 
-    <select id="findUserByAdminId" parameterType="String" resultType="AdminUserEntity">
-        SELECT admin_no
-             , admin_id
-             , password
-        FROM tb_admin
-        WHERE 1=1
-          AND admin_id = #{userId}
-    </select>
+    <update id="updateToken" parameterType="AdminTokenEntity">
+        UPDATE tb_token3
+        SET
+            random_access_token = #{randomAccessToken}
+          , access_expire_dt = #{accessExpireDt}
+          , random_refresh_token = #{randomRefreshToken}
+          , refresh_expire_dt = #{refreshExpireDt}
+          , upd_dt = now()
+        WHERE token_no = #{tokenNo}
+    </update>
 </mapper>

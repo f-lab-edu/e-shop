@@ -1,10 +1,10 @@
 package com.example.eshop.controller.v1.admin;
 
-import com.example.eshop.admin.auth.service.AdminAuthService;
+import com.example.eshop.member.auth.service.AdminAuthService;
 import com.example.eshop.controller.dto.AdminUserDto;
 import com.example.eshop.controller.dto.LoginDto;
 import com.example.eshop.controller.dto.TokenDto;
-import com.example.eshop.controller.dto.UserDto;
+import com.example.eshop.member.core.service.AdminMemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +17,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class AuthController {
     private final AdminAuthService adminAuthService;
+    private final AdminMemberService adminMemberService;
 
     /**
      * 아이디 중복조회
@@ -28,7 +29,7 @@ public class AuthController {
     public boolean checkDuplicatedId(@RequestParam String id) {
         log.info("checkDuplicatedId ::: {}", id);
 
-        return adminAuthService.isDuplicatedId(id);
+        return adminMemberService.isDuplicatedId(id);
     }
 
     /**
@@ -41,7 +42,7 @@ public class AuthController {
     public void signin(@Valid @RequestBody AdminUserDto adminUserDto) {
         log.info("signin ::: {}", adminUserDto);
 
-        adminAuthService.signin(adminUserDto);
+        adminMemberService.signin(adminUserDto);
     }
 
     /**
@@ -55,5 +56,27 @@ public class AuthController {
         log.info("login ::: {}", loginDto);
 
         return adminAuthService.login(loginDto);
+    }
+
+    /**
+     * 로그아웃
+     *
+     * @author hjkim
+     */
+    @PostMapping(value="/logout")
+    public void logout() {
+        log.info("logout");
+    }
+
+    /**
+     * 토큰 갱신
+     *
+     * @author hjkim
+     */
+    @GetMapping(value="/token/refresh")
+    public TokenDto refreshToken(@RequestAttribute long userSeq) {
+        log.info("refreshToken ::: {}", userSeq);
+
+        return adminAuthService.refreshToken(userSeq);
     }
 }

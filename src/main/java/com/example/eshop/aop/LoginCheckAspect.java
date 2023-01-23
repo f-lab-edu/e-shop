@@ -5,7 +5,7 @@ import com.example.eshop.common.type.TokenType;
 import com.example.eshop.common.util.JwtUtil;
 import com.example.eshop.member.auth.model.TokenEntity;
 import com.example.eshop.member.auth.service.AuthService;
-import com.example.eshop.member.core.model.UserEntity;
+import com.example.eshop.member.core.model.BuyerUserEntity;
 import com.example.eshop.member.core.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -37,14 +37,14 @@ public class LoginCheckAspect {
 
         TokenEntity tokenEntity = authService.getAccessToken(randomToken);
 
-        UserEntity user = memberService.getUserByUserNo(tokenEntity.getUserNo());
+        BuyerUserEntity user = memberService.getUserByUserNo(tokenEntity.getUserNo());
 
         Method method = MethodSignature.class.cast(pjp.getSignature()).getMethod();
         Object[] args = pjp.getArgs();
         Annotation[][] parameterAnnotations = method.getParameterAnnotations();
         for (int i = 0; i < args.length; i++) {
             for (Annotation parameterAnnotation : parameterAnnotations[i]) {
-                if (parameterAnnotation.annotationType() == User.class && method.getParameterTypes()[i] == UserEntity.class) {
+                if (parameterAnnotation.annotationType() == User.class && method.getParameterTypes()[i] == BuyerUserEntity.class) {
                     args[i] = user;
                 }
             }

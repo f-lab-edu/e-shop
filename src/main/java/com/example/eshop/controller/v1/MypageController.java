@@ -2,8 +2,8 @@ package com.example.eshop.controller.v1;
 
 import com.example.eshop.aop.LoginCheck;
 import com.example.eshop.aop.User;
-import com.example.eshop.controller.dto.UserDto;
-import com.example.eshop.member.core.model.UserEntity;
+import com.example.eshop.controller.dto.BuyerUserDto;
+import com.example.eshop.member.core.model.BuyerUserEntity;
 import com.example.eshop.member.core.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,11 +26,11 @@ public class MypageController {
      */
     @LoginCheck
     @GetMapping("/info")
-    public UserDto getUser(@User UserEntity user) {
+    public BuyerUserDto getUser(@User BuyerUserEntity user) {
         log.info("getUser ::: {}", user);
 
-        UserDto userDto = new UserDto();
+        BuyerUserDto buyerUserDto = new BuyerUserDto();
 
-        return userDto;
+        return buyerUserDto;
     }
 }

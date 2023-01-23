@@ -1,7 +1,7 @@
 package com.example.eshop.member.core.service.impl;
 
-import com.example.eshop.controller.dto.UserDto;
-import com.example.eshop.member.core.model.UserEntity;
+import com.example.eshop.controller.dto.BuyerUserDto;
+import com.example.eshop.member.core.model.BuyerUserEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class MemberServiceImplTest {
     @Transactional
     @DisplayName("signin :: 정상 케이스")
     void signin() {
-        UserDto user = new UserDto("hjkimtest", "test", "01", "test",
+        BuyerUserDto user = new BuyerUserDto("hjkimtest", "test", "01", "test",
                 "01012341234", "000001",
                 "Seoul", "Y");
 
@@ -45,9 +45,9 @@ public class MemberServiceImplTest {
     @Test
     @DisplayName("getUserByUserId :: 로그인 아이디로 유저정보 조회")
     void getUserByUserId() {
-        UserEntity selected = memberService.getUserByUserId("hjkim");
+        BuyerUserEntity selected = memberService.getUserByUserId("hjkim");
 
-        assertInstanceOf(UserEntity.class, selected);
+        assertInstanceOf(BuyerUserEntity.class, selected);
         assertEquals(1, selected.getUserNo());
         assertEquals("hjkim", selected.getUserId());
     }
@@ -55,9 +55,9 @@ public class MemberServiceImplTest {
     @Test
     @DisplayName("getUserByUserNo :: 유저번호로 유저정보 조회")
     void getUserByUserNo() {
-        UserEntity selected = memberService.getUserByUserNo(1);
+        BuyerUserEntity selected = memberService.getUserByUserNo(1);
 
-        assertInstanceOf(UserEntity.class, selected);
+        assertInstanceOf(BuyerUserEntity.class, selected);
         assertEquals(1, selected.getUserNo());
         assertEquals("hjkim", selected.getUserId());
     }

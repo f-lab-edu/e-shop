@@ -2,8 +2,8 @@ package com.example.eshop.controller.v1;
 
 import com.example.eshop.common.dto.Result;
 import com.example.eshop.common.type.TokenType;
+import com.example.eshop.controller.dto.BuyerUserDto;
 import com.example.eshop.controller.dto.LoginDto;
-import com.example.eshop.controller.dto.UserDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -56,7 +56,7 @@ class AuthControllerTest {
     @DisplayName("signin :: 정상 케이스")
     void signin() throws Exception {
         String content = objectMapper.writeValueAsString(
-                new UserDto("hjkim", "test", "01", "test",
+                new BuyerUserDto("hjkim", "test", "01", "test",
                         "01012341234", "000001",
                         "Seoul", "Y")
         );

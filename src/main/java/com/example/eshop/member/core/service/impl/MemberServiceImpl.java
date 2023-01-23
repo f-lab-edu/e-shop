@@ -1,8 +1,8 @@
 package com.example.eshop.member.core.service.impl;
 
 import com.example.eshop.common.exception.UserNotFoundException;
-import com.example.eshop.controller.dto.UserDto;
-import com.example.eshop.member.core.model.UserEntity;
+import com.example.eshop.controller.dto.BuyerUserDto;
+import com.example.eshop.member.core.model.BuyerUserEntity;
 import com.example.eshop.member.core.repository.MemberRepository;
 import com.example.eshop.member.core.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -25,39 +25,39 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public void signin(UserDto userDto) {
-        log.info("signin ::: {}", userDto);
+    public void signin(BuyerUserDto buyerUserDto) {
+        log.info("signin ::: {}", buyerUserDto);
 
-        UserEntity user = UserEntity.builder()
-                .userId(userDto.getId())
-                .name(userDto.getName())
-                .joinCode(userDto.getJoinCode())
-                .password(userDto.getPassword())
-                .tel(userDto.getContact())
-                .postNum(userDto.getPostNumber())
-                .address(userDto.getAddress())
-                .notiYn(userDto.getNotiYn())
+        BuyerUserEntity user = BuyerUserEntity.builder()
+                .userId(buyerUserDto.getId())
+                .name(buyerUserDto.getName())
+                .joinCode(buyerUserDto.getJoinCode())
+                .password(buyerUserDto.getPassword())
+                .tel(buyerUserDto.getContact())
+                .postNum(buyerUserDto.getPostNumber())
+                .address(buyerUserDto.getAddress())
+                .notiYn(buyerUserDto.getNotiYn())
                 .build();
 
         memberRepository.insertUserEntity(user);
     }
 
     @Override
-    public UserEntity getUserByUserId(String userId) {
-        UserEntity user = memberRepository.findUserByUserId(userId);
+    public BuyerUserEntity getUserByUserId(String userId) {
+        BuyerUserEntity user = memberRepository.findUserByUserId(userId);
         checkUserExist(user);
         return user;
     }
 
     @Override
-    public UserEntity getUserByUserNo(long userNo) {
-        UserEntity user = memberRepository.findUserByUserNo(userNo);
+    public BuyerUserEntity getUserByUserNo(long userNo) {
+        BuyerUserEntity user = memberRepository.findUserByUserNo(userNo);
         checkUserExist(user);
         return user;
     }
 
 
-    private void checkUserExist(UserEntity user) {
+    private void checkUserExist(BuyerUserEntity user) {
         if (user == null) {
             throw new UserNotFoundException();
         }
