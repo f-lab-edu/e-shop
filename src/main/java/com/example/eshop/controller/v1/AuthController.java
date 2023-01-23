@@ -1,9 +1,10 @@
 package com.example.eshop.controller.v1;
 
-import com.example.eshop.auth.service.AuthService;
-import com.example.eshop.controller.dto.BuyerUserDto;
+import com.example.eshop.member.auth.service.AuthService;
 import com.example.eshop.controller.dto.LoginDto;
 import com.example.eshop.controller.dto.TokenDto;
+import com.example.eshop.controller.dto.UserDto;
+import com.example.eshop.member.core.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
+    private final MemberService memberService;
 
     /**
      * 아이디 중복조회
@@ -27,7 +29,7 @@ public class AuthController {
     public boolean checkDuplicatedId(@RequestParam String id) {
         log.info("checkDuplicatedId ::: {}", id);
 
-        return authService.isDuplicatedId(id);
+        return memberService.isDuplicatedId(id);
     }
 
     /**
@@ -40,7 +42,7 @@ public class AuthController {
     public void signin(@Valid @RequestBody BuyerUserDto buyerUserDto) {
         log.info("signin ::: {}", buyerUserDto);
 
-        authService.signin(buyerUserDto);
+        memberService.signin(buyerUserDto);
     }
 
     /**

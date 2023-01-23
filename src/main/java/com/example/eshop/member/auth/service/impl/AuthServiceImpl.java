@@ -1,16 +1,18 @@
-package com.example.eshop.auth.service.impl;
+package com.example.eshop.member.auth.service.impl;
 
-import com.example.eshop.auth.model.TokenEntity;
-import com.example.eshop.auth.model.UserEntity;
-import com.example.eshop.auth.repository.AuthRepository;
-import com.example.eshop.auth.service.AuthService;
+import com.example.eshop.common.exception.InvalidTokenException;
+import com.example.eshop.common.exception.TokenExpiredException;
+import com.example.eshop.member.auth.model.TokenEntity;
+import com.example.eshop.member.core.model.UserEntity;
+import com.example.eshop.member.auth.repository.AuthRepository;
+import com.example.eshop.member.auth.service.AuthService;
 import com.example.eshop.common.exception.GenerateTokenFailedException;
 import com.example.eshop.common.exception.UserNotFoundException;
 import com.example.eshop.common.type.TokenType;
 import com.example.eshop.common.util.JwtUtil;
-import com.example.eshop.controller.dto.BuyerUserDto;
 import com.example.eshop.controller.dto.LoginDto;
 import com.example.eshop.controller.dto.TokenDto;
+import com.example.eshop.member.core.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,34 +26,11 @@ import java.time.LocalDateTime;
 public class AuthServiceImpl implements AuthService {
 
     private final JwtUtil jwtUtil;
+    private final MemberService memberService;
     private final AuthRepository authRepository;
 
     private static final long accessTokenExpiration = 1800;
     private static final long refreshTokenExpiration = 604800;
-
-    @Override
-    public boolean isDuplicatedId(String id) {
-        log.info("isDuplicatedId ::: {}", id);
-        return authRepository.isDuplicatedId(id);
-    }
-
-    @Override
-    public void signin(BuyerUserDto buyerUserDto) {
-        log.info("signin ::: {}", buyerUserDto);
-
-        UserEntity user = UserEntity.builder()
-                .userId(buyerUserDto.getId())
-                .name(buyerUserDto.getName())
-                .joinCode(buyerUserDto.getJoinCode())
-                .password(buyerUserDto.getPassword())
-                .tel(buyerUserDto.getContact())
-                .postNum(buyerUserDto.getPostNumber())
-                .address(buyerUserDto.getAddress())
-                .notiYn(buyerUserDto.getNotiYn())
-                .build();
-
-        authRepository.signin(user);
-    }
 
     @Override
     @Transactional
@@ -60,14 +39,18 @@ public class AuthServiceImpl implements AuthService {
 
         UserEntity user = getValidatedUserEntity(loginDto);
 
-        // 기존 토큰 있는지 확인
         TokenEntity token = authRepository.findAccessTokenByUserNo(user.getUserNo());
         if (isValid(token)) {
             return getJwtTokenFromRandomToken(token);
         }
 
         TokenEntity newToken = generateNewTokenEntity(user.getUserNo());
-        authRepository.insertToken(newToken);
+
+        if (token != null) {
+            updateToken(token, newToken);
+        } else {
+            authRepository.insertToken(newToken);
+        }
 
         return getJwtTokenFromRandomToken(newToken);
     }
@@ -77,26 +60,39 @@ public class AuthServiceImpl implements AuthService {
     public TokenDto refreshToken(long userSeq) {
         log.info("refreshToken ::: {}", userSeq);
 
-        authRepository.updateExpireDt(userSeq);
-
+        TokenEntity token = authRepository.findAccessTokenByUserNo(userSeq);
         TokenEntity newToken = generateNewTokenEntity(userSeq);
-        authRepository.insertToken(newToken);
+
+        updateToken(token, newToken);
 
         return getJwtTokenFromRandomToken(newToken);
     }
 
-    private UserEntity getValidatedUserEntity(LoginDto loginDto) {
-        UserEntity user = authRepository.findUserByUserId(loginDto.getId());
-        checkUserExist(user);
-        checkPasswordEqual(user.getPassword(), loginDto.getPassword());
+    @Override
+    public TokenEntity getAccessToken(String randomToken) {
+        log.info("getAccessToken ::: {}", randomToken);
 
-        return user;
+        TokenEntity token = authRepository.findAccessTokenByRandomToken(randomToken);
+        validateAccessTokenEntity(token);
+
+        return token;
     }
 
-    private void checkUserExist(UserEntity user) {
-        if (user == null) {
-            throw new UserNotFoundException();
-        }
+    @Override
+    public TokenEntity getRefreshToken(String randomToken) {
+        log.info("getRefreshToken ::: {}", randomToken);
+
+        TokenEntity token = authRepository.findRefreshTokenByRandomToken(randomToken);
+        validateRefreshTokenEntity(token);
+
+        return token;
+    }
+
+
+    private UserEntity getValidatedUserEntity(LoginDto loginDto) {
+        UserEntity user = memberService.getUserByUserId(loginDto.getId());
+        checkPasswordEqual(user.getPassword(), loginDto.getPassword());
+        return user;
     }
 
     private void checkPasswordEqual(String rawPassword, String requestPassword) {
@@ -108,6 +104,26 @@ public class AuthServiceImpl implements AuthService {
     private boolean isValid(TokenEntity tokenEntity) {
         return tokenEntity != null &&
                 tokenEntity.getAccessExpireDt().isAfter(LocalDateTime.now());
+    }
+
+    private void validateAccessTokenEntity(TokenEntity tokenEntity) {
+        if (tokenEntity == null) {
+            throw new InvalidTokenException();
+        }
+
+        if (tokenEntity.getAccessExpireDt().isBefore(LocalDateTime.now())) {
+            throw new TokenExpiredException();
+        }
+    }
+
+    private void validateRefreshTokenEntity(TokenEntity tokenEntity) {
+        if (tokenEntity == null) {
+            throw new InvalidTokenException();
+        }
+
+        if (tokenEntity.getRefreshExpireDt().isBefore(LocalDateTime.now())) {
+            throw new TokenExpiredException();
+        }
     }
 
     private TokenEntity generateNewTokenEntity(long userNo) {
@@ -141,5 +157,14 @@ public class AuthServiceImpl implements AuthService {
                 jwtUtil.generate(token.getRandomAccessToken()),
                 jwtUtil.generate(token.getRandomRefreshToken())
         );
+    }
+
+    private void updateToken(TokenEntity token, TokenEntity newToken) {
+        token.setRandomAccessToken(newToken.getRandomAccessToken());
+        token.setAccessExpireDt(newToken.getAccessExpireDt());
+        token.setRandomRefreshToken(newToken.getRandomRefreshToken());
+        token.setRefreshExpireDt(newToken.getRefreshExpireDt());
+
+        authRepository.updateToken(token);
     }
 }
