@@ -19,7 +19,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(accessInterceptor)
                 .excludePathPatterns("/v1/auth/check/duplicated-id",
                         "/v1/auth/signin", "/v1/auth/login", "/v1/auth/token/refresh",
-                        "/v1/mypage/info");
+                        "/v1/mypage/info", "/v1/admin/**");
         registry.addInterceptor(refreshInterceptor)
                 .addPathPatterns("/v1/auth/token/refresh");
     }
