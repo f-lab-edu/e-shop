@@ -1,4 +1,4 @@
-package com.example.eshop.admin.member.model;
+package com.example.eshop.admin.member.core.model;
 
 import lombok.Builder;
 import lombok.Getter;

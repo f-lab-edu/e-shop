@@ -1,18 +1,18 @@
-package com.example.eshop.member.auth.service.impl;
+package com.example.eshop.admin.member.auth.service.impl;
 
 import com.example.eshop.common.exception.GenerateTokenFailedException;
 import com.example.eshop.common.exception.InvalidTokenException;
 import com.example.eshop.common.exception.TokenExpiredException;
 import com.example.eshop.common.type.TokenType;
 import com.example.eshop.common.util.JwtUtil;
-import com.example.eshop.member.auth.model.AdminTokenEntity;
-import com.example.eshop.admin.member.model.AdminUserEntity;
-import com.example.eshop.member.auth.repository.AdminAuthRepository;
-import com.example.eshop.member.auth.service.AdminAuthService;
+import com.example.eshop.admin.member.auth.model.AdminTokenEntity;
+import com.example.eshop.admin.member.core.model.AdminUserEntity;
+import com.example.eshop.admin.member.auth.repository.AdminAuthRepository;
+import com.example.eshop.admin.member.auth.service.AdminAuthService;
 import com.example.eshop.common.exception.UserNotFoundException;
 import com.example.eshop.controller.dto.LoginDto;
 import com.example.eshop.controller.dto.TokenDto;
-import com.example.eshop.admin.member.service.AdminMemberService;
+import com.example.eshop.admin.member.core.service.AdminMemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -45,7 +45,12 @@ public class AdminAuthServiceImpl implements AdminAuthService {
         }
 
         AdminTokenEntity newToken = generateNewAdminTokenEntity(user.getAdminNo());
-        adminAuthRepository.insertAdminToken(newToken);
+
+        if (token != null) {
+            updateToken(token, newToken);
+        } else {
+            adminAuthRepository.insertAdminToken(newToken);
+        }
 
         return getJwtTokenFromRandomToken(newToken);
     }

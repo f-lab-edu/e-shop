@@ -1,10 +1,10 @@
-package com.example.eshop.admin.member.service.impl;
+package com.example.eshop.admin.member.core.service.impl;
 
-import com.example.eshop.admin.member.model.AdminUserEntity;
+import com.example.eshop.admin.member.core.model.AdminUserEntity;
 import com.example.eshop.common.exception.UserNotFoundException;
 import com.example.eshop.controller.dto.AdminUserDto;
-import com.example.eshop.admin.member.repository.AdminMemberRepository;
-import com.example.eshop.admin.member.service.AdminMemberService;
+import com.example.eshop.admin.member.core.repository.AdminMemberRepository;
+import com.example.eshop.admin.member.core.service.AdminMemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

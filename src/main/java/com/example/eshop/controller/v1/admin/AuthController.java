@@ -2,12 +2,12 @@ package com.example.eshop.controller.v1.admin;
 
 import com.example.eshop.aop.admin.Admin;
 import com.example.eshop.aop.admin.RefreshTokenCheck;
-import com.example.eshop.member.auth.service.AdminAuthService;
+import com.example.eshop.admin.member.auth.service.AdminAuthService;
 import com.example.eshop.controller.dto.AdminUserDto;
 import com.example.eshop.controller.dto.LoginDto;
 import com.example.eshop.controller.dto.TokenDto;
-import com.example.eshop.admin.member.model.AdminUserEntity;
-import com.example.eshop.admin.member.service.AdminMemberService;
+import com.example.eshop.admin.member.core.model.AdminUserEntity;
+import com.example.eshop.admin.member.core.service.AdminMemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;

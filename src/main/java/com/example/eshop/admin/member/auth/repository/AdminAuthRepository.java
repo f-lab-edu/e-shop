@@ -1,6 +1,6 @@
-package com.example.eshop.member.auth.repository;
+package com.example.eshop.admin.member.auth.repository;
 
-import com.example.eshop.member.auth.model.AdminTokenEntity;
+import com.example.eshop.admin.member.auth.model.AdminTokenEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 

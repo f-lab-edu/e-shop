@@ -1,8 +1,8 @@
-package com.example.eshop.member.auth.service;
+package com.example.eshop.admin.member.auth.service;
 
 import com.example.eshop.controller.dto.LoginDto;
 import com.example.eshop.controller.dto.TokenDto;
-import com.example.eshop.member.auth.model.AdminTokenEntity;
+import com.example.eshop.admin.member.auth.model.AdminTokenEntity;
 
 public interface AdminAuthService {
     TokenDto login(LoginDto loginDto);
