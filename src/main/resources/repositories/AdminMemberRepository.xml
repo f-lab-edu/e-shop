@@ -45,6 +45,19 @@
              , password
         FROM tb_admin
         WHERE 1=1
-          AND admin_id = #{userId}
+          AND admin_id = #{adminId}
+    </select>
+
+    <select id="findAdminUserByAdminNo" parameterType="long" resultType="AdminUserEntity">
+        SELECT admin_no
+             , admin_id
+             , name
+             , status
+             , tel
+             , post_num
+             , address
+        FROM tb_admin
+        WHERE 1=1
+          AND admin_no = #{adminNo}
     </select>
 </mapper>

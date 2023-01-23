@@ -14,6 +14,30 @@
           AND user_type = '02'
     </select>
 
+    <select id="findAccessTokenByRandomToken" resultType="AdminTokenEntity">
+        SELECT token_no
+             , user_no
+             , random_access_token
+             , access_expire_dt
+             , reg_dt
+             , upd_dt
+        FROM tb_token3
+        WHERE 1=1
+          AND random_access_token = #{randomToken}
+    </select>
+
+    <select id="findRefreshTokenByRandomToken" resultType="AdminTokenEntity">
+        SELECT token_no
+             , user_no
+             , random_refresh_token
+             , refresh_expire_dt
+             , reg_dt
+             , upd_dt
+        FROM tb_token3
+        WHERE 1=1
+          AND random_refresh_token = #{randomToken}
+    </select>
+
     <insert id="insertAdminToken" parameterType="AdminTokenEntity">
         INSERT INTO tb_token3 (
                                 user_type

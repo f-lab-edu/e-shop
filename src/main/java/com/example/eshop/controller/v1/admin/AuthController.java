@@ -1,9 +1,12 @@
 package com.example.eshop.controller.v1.admin;
 
+import com.example.eshop.aop.admin.Admin;
+import com.example.eshop.aop.admin.RefreshTokenCheck;
 import com.example.eshop.member.auth.service.AdminAuthService;
 import com.example.eshop.controller.dto.AdminUserDto;
 import com.example.eshop.controller.dto.LoginDto;
 import com.example.eshop.controller.dto.TokenDto;
+import com.example.eshop.member.core.model.AdminUserEntity;
 import com.example.eshop.member.core.service.AdminMemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -73,10 +76,11 @@ public class AuthController {
      *
      * @author hjkim
      */
+    @RefreshTokenCheck
     @GetMapping(value="/token/refresh")
-    public TokenDto refreshToken(@RequestAttribute long userSeq) {
-        log.info("refreshToken ::: {}", userSeq);
+    public TokenDto refreshToken(@Admin AdminUserEntity admin) {
+        log.info("refreshToken ::: {}", admin);
 
-        return adminAuthService.refreshToken(userSeq);
+        return adminAuthService.refreshToken(admin.getAdminNo());
     }
 }

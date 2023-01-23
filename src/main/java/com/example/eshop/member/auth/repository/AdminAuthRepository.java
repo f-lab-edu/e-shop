@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AdminAuthRepository {
     AdminTokenEntity findAccessTokenByUserNo(long adminNo);
+    AdminTokenEntity findAccessTokenByRandomToken(String randomToken);
+    AdminTokenEntity findRefreshTokenByRandomToken(String randomToken);
     void insertAdminToken(AdminTokenEntity token);
     void updateToken(AdminTokenEntity token);
 }

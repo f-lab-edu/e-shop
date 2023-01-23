@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface AdminMemberRepository {
     boolean isDuplicatedId(String userId);
     void insertAdminUserEntity(AdminUserEntity user);
-    AdminUserEntity findAdminUserByAdminId(String userId);
-    AdminUserEntity findAdminUserByUserNo(long userNo);
+    AdminUserEntity findAdminUserByAdminId(String adminId);
+    AdminUserEntity findAdminUserByUserNo(long adminNo);
 }

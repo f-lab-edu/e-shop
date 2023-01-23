@@ -1,10 +1,11 @@
 package com.example.eshop.member.auth.service.impl;
 
 import com.example.eshop.common.exception.GenerateTokenFailedException;
+import com.example.eshop.common.exception.InvalidTokenException;
+import com.example.eshop.common.exception.TokenExpiredException;
 import com.example.eshop.common.type.TokenType;
 import com.example.eshop.common.util.JwtUtil;
 import com.example.eshop.member.auth.model.AdminTokenEntity;
-import com.example.eshop.member.auth.model.TokenEntity;
 import com.example.eshop.member.core.model.AdminUserEntity;
 import com.example.eshop.member.auth.repository.AdminAuthRepository;
 import com.example.eshop.member.auth.service.AdminAuthService;
@@ -51,16 +52,37 @@ public class AdminAuthServiceImpl implements AdminAuthService {
 
     @Override
     @Transactional
-    public TokenDto refreshToken(long userSeq) {
-        log.info("refreshToken ::: {}", userSeq);
+    public TokenDto refreshToken(long adminNo) {
+        log.info("refreshToken ::: {}", adminNo);
 
-        AdminTokenEntity token = adminAuthRepository.findAccessTokenByUserNo(userSeq);
-        AdminTokenEntity newToken = generateNewAdminTokenEntity(userSeq);
+        AdminTokenEntity token = adminAuthRepository.findAccessTokenByUserNo(adminNo);
+        AdminTokenEntity newToken = generateNewAdminTokenEntity(adminNo);
 
         updateToken(token, newToken);
 
         return getJwtTokenFromRandomToken(newToken);
     }
+
+    @Override
+    public AdminTokenEntity getAccessToken(String randomToken) {
+        log.info("getAccessToken ::: {}", randomToken);
+
+        AdminTokenEntity token = adminAuthRepository.findAccessTokenByRandomToken(randomToken);
+        validateAccessTokenEntity(token);
+
+        return token;
+    }
+
+    @Override
+    public AdminTokenEntity getRefreshToken(String randomToken) {
+        log.info("getRefreshToken ::: {}", randomToken);
+
+        AdminTokenEntity token = adminAuthRepository.findRefreshTokenByRandomToken(randomToken);
+        validateRefreshTokenEntity(token);
+
+        return token;
+    }
+
 
     private AdminUserEntity getValidatedUserEntity(LoginDto loginDto) {
         AdminUserEntity user = adminMemberService.getAdminUserByAdminId(loginDto.getId());
@@ -120,5 +142,25 @@ public class AdminAuthServiceImpl implements AdminAuthService {
         token.setRefreshExpireDt(newToken.getRefreshExpireDt());
 
         adminAuthRepository.updateToken(token);
+    }
+
+    private void validateAccessTokenEntity(AdminTokenEntity adminTokenEntity) {
+        if (adminTokenEntity == null) {
+            throw new InvalidTokenException();
+        }
+
+        if (adminTokenEntity.getAccessExpireDt().isBefore(LocalDateTime.now())) {
+            throw new TokenExpiredException();
+        }
+    }
+
+    private void validateRefreshTokenEntity(AdminTokenEntity adminTokenEntity) {
+        if (adminTokenEntity == null) {
+            throw new InvalidTokenException();
+        }
+
+        if (adminTokenEntity.getRefreshExpireDt().isBefore(LocalDateTime.now())) {
+            throw new TokenExpiredException();
+        }
     }
 }
