@@ -2,6 +2,7 @@ package com.example.eshop.member.core.service.impl;
 
 import com.example.eshop.controller.dto.UserDto;
 import com.example.eshop.member.core.model.UserEntity;
+import com.example.eshop.member.core.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +13,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class MemberServiceImplTest {
-    private MemberServiceImpl memberService;
+    private MemberService memberService;
 
     @Autowired
-    public void setMemberServiceImplTest(MemberServiceImpl memberService) {
+    public void setMemberServiceImplTest(MemberService memberService) {
         this.memberService = memberService;
     }
 
