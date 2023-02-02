@@ -1,6 +1,6 @@
 package com.example.eshop.member.auth.service.impl;
 
-import com.example.eshop.auth.service.impl.AuthServiceImpl;
+import com.example.eshop.auth.service.AuthService;
 import com.example.eshop.common.util.JwtUtil;
 import com.example.eshop.controller.dto.LoginDto;
 import com.example.eshop.controller.dto.TokenDto;
@@ -15,12 +15,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class AuthServiceImplTest {
-    private AuthServiceImpl authService;
+    private AuthService authService;
     private JwtUtil jwtUtil;
     LoginDto loginDto;
 
     @Autowired
-    public void setAuthServiceImplTest(AuthServiceImpl authService, JwtUtil jwtUtil) {
+    public void setAuthServiceImplTest(AuthService authService, JwtUtil jwtUtil) {
         this.authService = authService;
         this.jwtUtil = jwtUtil;
         this.loginDto = new LoginDto("hjkim", "asdf");
