@@ -3,6 +3,7 @@ package com.example.eshop.admin.member.core.model;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
@@ -13,26 +14,35 @@ public class AdminUserEntity {
 
     private String adminId;
 
+    @Setter
     private String name;
 
+    @Setter
     private String status;
 
     private String levelCd;
 
+    @Setter
     private String password;
 
+    @Setter
     private String tel;
 
+    @Setter
     private String postNum;
 
+    @Setter
     private String address;
 
+    @Setter
     private LocalDate lastLoginDt;
 
+    @Setter
     private LocalDate modifyPwDt;
 
     private LocalDate regDt;
 
+    @Setter
     private LocalDate updDt;
 
     @Builder
