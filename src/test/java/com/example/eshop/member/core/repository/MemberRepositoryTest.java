@@ -1,6 +1,6 @@
-package com.example.eshop.auth.repository;
+package com.example.eshop.member.core.repository;
 
-import com.example.eshop.auth.model.UserEntity;
+import com.example.eshop.member.core.model.UserEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
@@ -12,18 +12,19 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @MybatisTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class AuthRepositoryTest {
-    private AuthRepository authRepository;
+class MemberRepositoryTest {
+
+    private MemberRepository memberRepository;
 
     @Autowired
-    public void setAuthRepository(AuthRepository authRepository) {
-        this.authRepository = authRepository;
+    public void setMemberRepository(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
     }
 
     @Test
     @DisplayName("isDuplicatedId :: 정상 케이스")
     void isDuplicatedId() {
-        boolean isDuplicated = authRepository.isDuplicatedId("hjkim");
+        boolean isDuplicated = memberRepository.isDuplicatedId("hjkim");
 
         assertTrue(isDuplicated);
     }
@@ -31,7 +32,7 @@ class AuthRepositoryTest {
     @Test
     @Transactional
     @DisplayName("signin :: 정상 케이스")
-    void signin() {
+    void insertUserEntity() {
         UserEntity user = UserEntity.builder()
                 .userId("hjkimtest")
                 .name("test")
@@ -43,9 +44,9 @@ class AuthRepositoryTest {
                 .notiYn("Y")
                 .build();
 
-        authRepository.signin(user);
+        memberRepository.insertUserEntity(user);
 
-        boolean isDuplicated = authRepository.isDuplicatedId("hjkimtest");
+        boolean isDuplicated = memberRepository.isDuplicatedId("hjkimtest");
 
         assertTrue(isDuplicated);
     }
@@ -53,8 +54,7 @@ class AuthRepositoryTest {
     @Test
     @DisplayName("findUserByUserId :: 정상 케이스")
     void findUserByUserId() {
-        UserEntity user = authRepository.findUserByUserId("hjkim");
-        System.out.println(user.getUserId());
+        UserEntity user = memberRepository.findUserByUserId("hjkim");
 
         assertEquals("hjkim", user.getUserId());
         assertEquals(1, user.getUserNo());
@@ -63,7 +63,7 @@ class AuthRepositoryTest {
     @Test
     @DisplayName("findUserByUserNo :: 정상 케이스")
     void findUserByUserNo() {
-        UserEntity user = authRepository.findUserByUserNo(1);
+        UserEntity user = memberRepository.findUserByUserNo(1);
 
         assertEquals("hjkim", user.getUserId());
         assertEquals(1, user.getUserNo());

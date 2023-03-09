@@ -1,11 +1,11 @@
 package com.example.eshop.interceptor;
 
-import com.example.eshop.auth.model.TokenEntity;
-import com.example.eshop.auth.repository.AuthRepository;
+import com.example.eshop.member.auth.model.TokenEntity;
 import com.example.eshop.common.exception.RefreshTokenRequiredException;
 import com.example.eshop.common.exception.TokenExpiredException;
 import com.example.eshop.common.type.TokenType;
 import com.example.eshop.common.util.JwtUtil;
+import com.example.eshop.member.auth.service.AuthService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -17,8 +17,8 @@ import java.time.LocalDateTime;
 public class RefreshInterceptor extends AuthInterceptor {
 
     public RefreshInterceptor(JwtUtil jwtUtil,
-                              AuthRepository authRepository) {
-        super(jwtUtil, authRepository);
+                              AuthService authService) {
+        super(jwtUtil, authService);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class RefreshInterceptor extends AuthInterceptor {
     protected void checkTokenExpired() {
         String randomToken = jwtUtil.getRandomToken(getToken());
 
-        TokenEntity token = authRepository.findRefreshTokenByRandomToken(randomToken);
+        TokenEntity token = authService.getRefreshToken(randomToken);
         setTokenEntity(token);
 
         if (token.getRefreshExpireDt().isBefore(LocalDateTime.now())) {
