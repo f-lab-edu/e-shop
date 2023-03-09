@@ -1,4 +1,4 @@
-package com.example.eshop.member.core.service.impl;
+package com.example.eshop.member.core.service;
 
 import com.example.eshop.controller.dto.BuyerUserDto;
 import com.example.eshop.member.core.model.BuyerUserEntity;
@@ -11,11 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-public class MemberServiceImplTest {
-    private MemberServiceImpl memberService;
+public class MemberServiceTest {
+    private MemberService memberService;
 
     @Autowired
-    public void setMemberServiceImplTest(MemberServiceImpl memberService) {
+    public void setMemberServiceImplTest(MemberService memberService) {
         this.memberService = memberService;
     }
 
