@@ -8,6 +8,7 @@ import com.example.eshop.admin.member.core.service.AdminMemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -22,6 +23,7 @@ public class AdminMemberServiceImpl implements AdminMemberService {
     }
 
     @Override
+    @Transactional
     public void signin(AdminUserDto adminUserDto) {
         log.info("signin ::: {}", adminUserDto);
 
