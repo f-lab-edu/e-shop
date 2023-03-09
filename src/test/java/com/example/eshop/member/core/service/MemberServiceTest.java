@@ -15,7 +15,7 @@ public class MemberServiceTest {
     private MemberService memberService;
 
     @Autowired
-    public void setMemberServiceImplTest(MemberService memberService) {
+    public void setMemberServiceTest(MemberService memberService) {
         this.memberService = memberService;
     }
 

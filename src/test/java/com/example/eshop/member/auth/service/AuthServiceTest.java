@@ -1,10 +1,10 @@
 package com.example.eshop.member.auth.service;
 
+import com.example.eshop.auth.model.TokenEntity;
 import com.example.eshop.auth.service.AuthService;
 import com.example.eshop.common.util.JwtUtil;
 import com.example.eshop.controller.dto.LoginDto;
 import com.example.eshop.controller.dto.TokenDto;
-import com.example.eshop.member.auth.model.TokenEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ class AuthServiceTest {
     LoginDto loginDto;
 
     @Autowired
-    public void setAuthServiceImplTest(AuthService authService, JwtUtil jwtUtil) {
+    public void setAuthServiceTest(AuthService authService, JwtUtil jwtUtil) {
         this.authService = authService;
         this.jwtUtil = jwtUtil;
         this.loginDto = new LoginDto("hjkim", "asdf");
