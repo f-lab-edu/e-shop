@@ -1,10 +1,9 @@
-package com.example.eshop.member.auth.service.impl;
+package com.example.eshop.member.auth.service;
 
 import com.example.eshop.common.util.JwtUtil;
 import com.example.eshop.controller.dto.LoginDto;
 import com.example.eshop.controller.dto.TokenDto;
 import com.example.eshop.member.auth.model.TokenEntity;
-import com.example.eshop.member.auth.service.AuthService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class AuthServiceImplTest {
+class AuthServiceTest {
     private AuthService authService;
     private JwtUtil jwtUtil;
     LoginDto loginDto;
