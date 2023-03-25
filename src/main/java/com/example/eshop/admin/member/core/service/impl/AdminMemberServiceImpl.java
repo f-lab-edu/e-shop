@@ -1,10 +1,13 @@
 package com.example.eshop.admin.member.core.service.impl;
 
 import com.example.eshop.admin.member.core.model.AdminUserEntity;
+import com.example.eshop.common.exception.AccessForbiddenException;
 import com.example.eshop.common.exception.UserNotFoundException;
+import com.example.eshop.common.type.MemberType;
 import com.example.eshop.controller.dto.AdminUserDto;
 import com.example.eshop.admin.member.core.repository.AdminMemberRepository;
 import com.example.eshop.admin.member.core.service.AdminMemberService;
+import com.example.eshop.common.type.MemberStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -44,6 +47,7 @@ public class AdminMemberServiceImpl implements AdminMemberService {
     public AdminUserEntity getAdminUserByAdminId(String adminId) {
         AdminUserEntity user = adminMemberRepository.findAdminUserByAdminId(adminId);
         checkUserExist(user);
+        checkUserStatus(user);
         return user;
     }
 
@@ -58,6 +62,21 @@ public class AdminMemberServiceImpl implements AdminMemberService {
     private void checkUserExist(AdminUserEntity user) {
         if (user == null) {
             throw new UserNotFoundException();
+        }
+    }
+
+    private void checkUserStatus(AdminUserEntity user) {
+        if (user.getStatus() == null || user.getLevelCd() == null) {
+            throw new AccessForbiddenException();
+        }
+
+        if (!user.getStatus().equals(MemberStatus.NORMAL.getCode())) {
+            throw new AccessForbiddenException();
+        }
+
+        if (!user.getLevelCd().equals(MemberType.SELLER.getCode())
+                && !user.getLevelCd().equals(MemberType.ADMIN.getCode())) {
+            throw new AccessForbiddenException();
         }
     }
 }

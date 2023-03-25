@@ -1,5 +1,6 @@
 package com.example.eshop.admin.member.core.model;
 
+import com.example.eshop.common.type.MemberStatus;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -51,7 +52,7 @@ public class AdminUserEntity {
                            String address) {
         this.adminId = adminId;
         this.name = name;
-        this.status = "0";
+        this.status = MemberStatus.NORMAL.getCode();
         this.levelCd = levelCd;
         this.password = password;
         this.tel = tel;

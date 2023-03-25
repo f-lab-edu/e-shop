@@ -1,5 +1,6 @@
 package com.example.eshop.member.core.model;
 
+import com.example.eshop.common.type.MemberStatus;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -54,7 +55,7 @@ public class BuyerUserEntity {
         this.userId = userId;
         this.name = name;
         this.joinCode = joinCode;
-        this.status = "0";
+        this.status = MemberStatus.NORMAL.getCode();
         this.password = password;
         this.tel = tel;
         this.postNum = postNum;

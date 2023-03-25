@@ -135,8 +135,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private boolean isValid(TokenEntity tokenEntity) {
-        return tokenEntity != null &&
-                tokenEntity.getAccessExpireDt().isAfter(LocalDateTime.now());
+        return tokenEntity != null
+                && tokenEntity.getAccessExpireDt().isAfter(LocalDateTime.now());
     }
 
     private void validateAccessTokenEntity(TokenEntity tokenEntity) {

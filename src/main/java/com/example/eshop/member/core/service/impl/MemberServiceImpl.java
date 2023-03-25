@@ -1,7 +1,9 @@
 package com.example.eshop.member.core.service.impl;
 
+import com.example.eshop.common.exception.AccessForbiddenException;
 import com.example.eshop.common.exception.UserNotFoundException;
 import com.example.eshop.controller.dto.BuyerUserDto;
+import com.example.eshop.common.type.MemberStatus;
 import com.example.eshop.member.core.model.BuyerUserEntity;
 import com.example.eshop.member.core.repository.MemberRepository;
 import com.example.eshop.member.core.service.MemberService;
@@ -46,6 +48,7 @@ public class MemberServiceImpl implements MemberService {
     public BuyerUserEntity getUserByUserId(String userId) {
         BuyerUserEntity user = memberRepository.findUserByUserId(userId);
         checkUserExist(user);
+        checkUserStatus(user);
         return user;
     }
 
@@ -60,6 +63,16 @@ public class MemberServiceImpl implements MemberService {
     private void checkUserExist(BuyerUserEntity user) {
         if (user == null) {
             throw new UserNotFoundException();
+        }
+    }
+
+    private void checkUserStatus(BuyerUserEntity user) {
+        if (user.getStatus() == null) {
+            throw new AccessForbiddenException();
+        }
+
+        if (!user.getStatus().equals(MemberStatus.NORMAL.getCode())) {
+            throw new AccessForbiddenException();
         }
     }
 }
