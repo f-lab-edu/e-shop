@@ -3,22 +3,17 @@ package com.example.eshop.aop.admin;
 import com.example.eshop.aop.BaseLoginCheckAspect;
 import com.example.eshop.auth.model.TokenEntity;
 import com.example.eshop.auth.service.AuthService;
-import com.example.eshop.common.exception.RefreshTokenRequiredException;
 import com.example.eshop.common.type.TokenType;
 import com.example.eshop.common.util.JwtUtil;
 import com.example.eshop.admin.member.core.model.AdminUserEntity;
 import com.example.eshop.admin.member.core.service.AdminMemberService;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
