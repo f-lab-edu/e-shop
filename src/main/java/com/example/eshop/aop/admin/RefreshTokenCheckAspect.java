@@ -1,5 +1,6 @@
 package com.example.eshop.aop.admin;
 
+import com.example.eshop.aop.BaseLoginCheckAspect;
 import com.example.eshop.auth.model.TokenEntity;
 import com.example.eshop.auth.service.AuthService;
 import com.example.eshop.common.exception.RefreshTokenRequiredException;
@@ -24,14 +25,14 @@ import java.lang.reflect.Method;
 @Aspect
 @Component
 @RequiredArgsConstructor
-public class RefreshTokenCheckAspect {
+public class RefreshTokenCheckAspect extends BaseLoginCheckAspect {
     private final JwtUtil jwtUtil;
     private final AuthService authService;
     private final AdminMemberService memberService;
 
     @Around(value = "@annotation(refreshTokenCheck)")
     public Object loginCheck(ProceedingJoinPoint pjp, RefreshTokenCheck refreshTokenCheck) throws Throwable {
-        String token = loadTokenFromHttpRequest();
+        String token = super.loadTokenFromHttpRequest(TokenType.REFRESH);
 
         String randomToken = jwtUtil.getRandomToken(token);
 
@@ -51,17 +52,5 @@ public class RefreshTokenCheckAspect {
         }
 
         return pjp.proceed(args);
-    }
-
-
-
-    private String loadTokenFromHttpRequest() {
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        String token = request.getHeader(TokenType.REFRESH.getHeaderName());
-
-        if (StringUtils.isEmpty(token)) {
-            throw new RefreshTokenRequiredException();
-        }
-        return token;
     }
 }
