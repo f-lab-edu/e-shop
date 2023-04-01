@@ -64,8 +64,10 @@ public class AuthController {
      * @author hjkim
      */
     @PostMapping(value="/logout")
-    public void logout() {
+    public void logout(@RequestAttribute long userSeq) {
         log.info("logout");
+
+        authService.logout(userSeq);
     }
 
     /**

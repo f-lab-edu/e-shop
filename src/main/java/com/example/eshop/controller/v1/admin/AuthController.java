@@ -67,8 +67,11 @@ public class AuthController {
      * @author hjkim
      */
     @PostMapping(value="/logout")
-    public void logout() {
+    public void logout(@Admin AdminUserEntity admin) {
         log.info("logout");
+
+        // memberType SELLER 와 ADMIN
+        authService.logout(admin.getAdminNo());
     }
 
     /**

@@ -83,4 +83,9 @@
             , upd_dt = now()
         WHERE token_no = #{tokenNo}
     </update>
+
+    <delete id="deleteToken" parameterType="long">
+        DELETE FROM tb_token3
+         WHERE user_no = #{userNo}
+    </delete>
 </mapper>

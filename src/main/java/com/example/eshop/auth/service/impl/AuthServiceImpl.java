@@ -83,6 +83,14 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
+    public void logout(long userSeq) {
+        log.info("logout ::: {}", userSeq);
+
+        authRepository.deleteToken(userSeq);
+    }
+
+    @Override
+    @Transactional
     public TokenDto refreshToken(long userSeq, String userType) {
         log.info("refreshToken ::: {}", userSeq);
 

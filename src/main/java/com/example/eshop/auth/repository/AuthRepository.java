@@ -13,4 +13,5 @@ public interface AuthRepository {
     TokenEntity findRefreshTokenByRandomToken(String randomToken);
     void insertToken(TokenEntity token);
     void updateToken(TokenEntity token);
+    void deleteToken(long userNo);
 }
