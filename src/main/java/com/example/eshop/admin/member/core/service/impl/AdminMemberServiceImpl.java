@@ -47,7 +47,6 @@ public class AdminMemberServiceImpl implements AdminMemberService {
     public AdminUserEntity getAdminUserByAdminId(String adminId) {
         AdminUserEntity user = adminMemberRepository.findAdminUserByAdminId(adminId);
         checkUserExist(user);
-        checkUserStatus(user);
         return user;
     }
 
@@ -63,6 +62,8 @@ public class AdminMemberServiceImpl implements AdminMemberService {
         if (user == null) {
             throw new UserNotFoundException();
         }
+
+        checkUserStatus(user);
     }
 
     private void checkUserStatus(AdminUserEntity user) {

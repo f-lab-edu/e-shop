@@ -48,7 +48,6 @@ public class MemberServiceImpl implements MemberService {
     public BuyerUserEntity getUserByUserId(String userId) {
         BuyerUserEntity user = memberRepository.findUserByUserId(userId);
         checkUserExist(user);
-        checkUserStatus(user);
         return user;
     }
 
@@ -64,6 +63,8 @@ public class MemberServiceImpl implements MemberService {
         if (user == null) {
             throw new UserNotFoundException();
         }
+
+        checkUserStatus(user);
     }
 
     private void checkUserStatus(BuyerUserEntity user) {
