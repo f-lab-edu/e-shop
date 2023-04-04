@@ -24,7 +24,7 @@
         FROM tb_token3
         WHERE 1=1
           AND user_no = #{adminNo}
-          AND user_type = '02'
+          AND user_type in ('02', '03')
     </select>
 
     <select id="findAccessTokenByRandomToken" resultType="TokenEntity">
@@ -84,8 +84,15 @@
         WHERE token_no = #{tokenNo}
     </update>
 
-    <delete id="deleteToken" parameterType="long">
+    <delete id="deleteTokenByUserNo" parameterType="long">
         DELETE FROM tb_token3
          WHERE user_no = #{userNo}
+           AND user_type = '01'
+    </delete>
+
+    <delete id="deleteTokenByAdminNo" parameterType="long">
+        DELETE FROM tb_token3
+        WHERE user_no = #{userNo}
+          AND user_type in ('02', '03')
     </delete>
 </mapper>

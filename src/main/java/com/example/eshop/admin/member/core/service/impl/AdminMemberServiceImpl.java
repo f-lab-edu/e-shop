@@ -33,7 +33,7 @@ public class AdminMemberServiceImpl implements AdminMemberService {
         AdminUserEntity adminUser = AdminUserEntity.builder()
                 .adminId(adminUserDto.getId())
                 .name(adminUserDto.getName())
-                .levelCd(adminUserDto.getLevelCode())
+                .levelCd(adminUserDto.getType().getCode())
                 .password(adminUserDto.getPassword())
                 .tel(adminUserDto.getContact())
                 .postNum(adminUserDto.getPostNumber())

@@ -70,7 +70,7 @@ public class AuthServiceImpl implements AuthService {
             return getJwtTokenFromRandomToken(token);
         }
 
-        TokenEntity newToken = generateNewTokenEntity(user.getAdminNo(), "02");
+        TokenEntity newToken = generateNewTokenEntity(user.getAdminNo(), user.getLevelCd());
 
         if (token != null) {
             updateToken(token, newToken);
@@ -86,7 +86,15 @@ public class AuthServiceImpl implements AuthService {
     public void logout(long userSeq) {
         log.info("logout ::: {}", userSeq);
 
-        authRepository.deleteToken(userSeq);
+        authRepository.deleteTokenByUserNo(userSeq);
+    }
+
+    @Override
+    @Transactional
+    public void adminLogout(long adminSeq) {
+        log.info("logout ::: {}", adminSeq);
+
+        authRepository.deleteTokenByAdminNo(adminSeq);
     }
 
     @Override

@@ -70,8 +70,7 @@ public class AuthController {
     public void logout(@Admin AdminUserEntity admin) {
         log.info("logout");
 
-        // memberType SELLER 와 ADMIN
-        authService.logout(admin.getAdminNo());
+        authService.adminLogout(admin.getAdminNo());
     }
 
     /**
