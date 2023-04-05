@@ -1,6 +1,6 @@
 package com.example.eshop.member.core.repository;
 
-import com.example.eshop.member.core.model.UserEntity;
+import com.example.eshop.member.core.model.BuyerUserEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
@@ -33,7 +33,7 @@ class MemberRepositoryTest {
     @Transactional
     @DisplayName("signin :: 정상 케이스")
     void insertUserEntity() {
-        UserEntity user = UserEntity.builder()
+        BuyerUserEntity user = BuyerUserEntity.builder()
                 .userId("hjkimtest")
                 .name("test")
                 .joinCode("01")
@@ -54,7 +54,7 @@ class MemberRepositoryTest {
     @Test
     @DisplayName("findUserByUserId :: 정상 케이스")
     void findUserByUserId() {
-        UserEntity user = memberRepository.findUserByUserId("hjkim");
+        BuyerUserEntity user = memberRepository.findUserByUserId("hjkim");
 
         assertEquals("hjkim", user.getUserId());
         assertEquals(1, user.getUserNo());
@@ -63,7 +63,7 @@ class MemberRepositoryTest {
     @Test
     @DisplayName("findUserByUserNo :: 정상 케이스")
     void findUserByUserNo() {
-        UserEntity user = memberRepository.findUserByUserNo(1);
+        BuyerUserEntity user = memberRepository.findUserByUserNo(1);
 
         assertEquals("hjkim", user.getUserId());
         assertEquals(1, user.getUserNo());

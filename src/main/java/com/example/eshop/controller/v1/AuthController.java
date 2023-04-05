@@ -1,9 +1,9 @@
 package com.example.eshop.controller.v1;
 
-import com.example.eshop.member.auth.service.AuthService;
+import com.example.eshop.controller.dto.BuyerUserDto;
+import com.example.eshop.auth.service.AuthService;
 import com.example.eshop.controller.dto.LoginDto;
 import com.example.eshop.controller.dto.TokenDto;
-import com.example.eshop.controller.dto.UserDto;
 import com.example.eshop.member.core.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,13 +36,13 @@ public class AuthController {
      * 회원가입
      *
      * @author hjkim
-     * @param userDto
+     * @param buyerUserDto
      */
     @PostMapping(value="/signin")
-    public void signin(@Valid @RequestBody UserDto userDto) {
-        log.info("signin ::: {}", userDto);
+    public void signin(@Valid @RequestBody BuyerUserDto buyerUserDto) {
+        log.info("signin ::: {}", buyerUserDto);
 
-        memberService.signin(userDto);
+        memberService.signin(buyerUserDto);
     }
 
     /**
@@ -64,8 +64,10 @@ public class AuthController {
      * @author hjkim
      */
     @PostMapping(value="/logout")
-    public void logout() {
+    public void logout(@RequestAttribute long userSeq) {
         log.info("logout");
+
+        authService.logout(userSeq);
     }
 
     /**
@@ -77,6 +79,6 @@ public class AuthController {
     public TokenDto refreshToken(@RequestAttribute long userSeq) {
         log.info("refreshToken ::: {}", userSeq);
 
-        return authService.refreshToken(userSeq);
+        return authService.refreshToken(userSeq, "01");
     }
 }

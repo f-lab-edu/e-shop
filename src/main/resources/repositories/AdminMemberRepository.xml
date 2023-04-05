@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.eshop.admin.member.core.repository.AdminMemberRepository">
+    <select id="isDuplicatedId" parameterType="String" resultType="boolean">
+        SELECT EXISTS(SELECT admin_id
+                      FROM tb_admin
+                      WHERE 1=1
+                        AND admin_id=#{adminId})
+    </select>
+
+    <insert id="insertAdminUserEntity" parameterType="AdminUserEntity">
+        INSERT INTO tb_admin (
+                               admin_id
+                             , name
+                             , status
+                             , level_cd
+                             , password
+                             , tel
+                             , post_num
+                             , address
+                             , last_login_dt
+                             , modify_pw_dt
+                             , reg_dt
+                             , upd_dt
+        )
+        VALUES (
+                   #{adminId}
+               , #{name}
+               , #{status}
+               , #{levelCd}
+               , #{password}
+               , #{tel}
+               , #{postNum}
+               , #{address}
+               , now()
+               , now()
+               , now()
+               , now()
+               )
+    </insert>
+
+    <select id="findAdminUserByAdminId" parameterType="String" resultType="AdminUserEntity">
+        SELECT admin_no
+             , admin_id
+             , password
+        FROM tb_admin
+        WHERE 1=1
+          AND admin_id = #{adminId}
+    </select>
+
+    <select id="findAdminUserByAdminNo" parameterType="long" resultType="AdminUserEntity">
+        SELECT admin_no
+             , admin_id
+             , name
+             , status
+             , tel
+             , post_num
+             , address
+        FROM tb_admin
+        WHERE 1=1
+          AND admin_no = #{adminNo}
+    </select>
+</mapper>

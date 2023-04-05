@@ -1,6 +1,7 @@
 package com.example.eshop.member.auth.repository;
 
-import com.example.eshop.member.auth.model.TokenEntity;
+import com.example.eshop.auth.model.TokenEntity;
+import com.example.eshop.auth.repository.AuthRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
@@ -28,6 +29,7 @@ class AuthRepositoryTest {
     public void setAuthRepository(AuthRepository authRepository) {
         this.authRepository = authRepository;
         this.token = new TokenEntity(1,
+                "01",
                 ACCESS_RANDOM_TOKEN,
                 REFRESH_RANDOM_TOKEN,
                 LocalDateTime.now().plusSeconds(ACCESS_TOKEN_EXPIRATION),

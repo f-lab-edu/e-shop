@@ -1,6 +1,6 @@
 package com.example.eshop.member.core.repository;
 
-import com.example.eshop.member.core.model.UserEntity;
+import com.example.eshop.member.core.model.BuyerUserEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MemberRepository {
     boolean isDuplicatedId(String userId);
-    void insertUserEntity(UserEntity user);
-    UserEntity findUserByUserId(String userId);
-    UserEntity findUserByUserNo(long userNo);
+    void insertUserEntity(BuyerUserEntity user);
+    BuyerUserEntity findUserByUserId(String userId);
+    BuyerUserEntity findUserByUserNo(long userNo);
 }
