@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.eshop.item.repository.ItemRepository">
+    <insert id="insertItem" parameterType="ItemEntity">
+        INSERT INTO tb_item (
+                                admin_no
+                              , category_no
+                              , name
+                              , small_image
+                              , big_image
+                              , price
+                              , intro
+                              , content
+                              , remains
+                              , fast_yn
+                              , reg_dt
+                              , upd_dt
+        ) VALUES (
+                     #{adminNo}
+                 , #{categoryNo}
+                 , #{name}
+                 , #{smallImage}
+                 , #{bigImage}
+                 , #{price}
+                 , #{intro}
+                 , #{content}
+                 , #{remains}
+                 , #{fastYn}
+                 , now()
+                 , now()
+                 )
+    </insert>
+</mapper>
