@@ -1,5 +1,8 @@
 package com.example.eshop.controller.v1.admin;
 
+import com.example.eshop.admin.member.core.model.AdminUserEntity;
+import com.example.eshop.aop.admin.Admin;
+import com.example.eshop.aop.admin.AdminLoginCheck;
 import com.example.eshop.controller.dto.ItemDto;
 import com.example.eshop.item.service.ItemService;
 import lombok.RequiredArgsConstructor;
@@ -18,16 +21,15 @@ public class ItemController {
      * 상품 등록
      *
      * @author hjkim
-     * @param itemSeq, item
+     * @param admin, item
      */
-    @PostMapping(value="/{itemSeq}")
-    public void createItem(@PathVariable long itemSeq,
+    @AdminLoginCheck
+    @PostMapping(value="")
+    public void createItem(@Admin AdminUserEntity admin,
                            @RequestBody ItemDto item) {
-        log.info("createItem ::: {} {}", itemSeq, item);
+        log.info("createItem ::: {} {}", admin, item);
 
-        // TODO : validate createItem request param
-
-        itemService.createItem(itemSeq, item);
+        itemService.createItem(admin.getAdminNo(), item);
     }
 
 }

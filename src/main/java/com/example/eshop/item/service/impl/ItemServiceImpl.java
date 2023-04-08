@@ -18,11 +18,11 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public void createItem(long itemSeq, ItemDto itemDto) {
+    public void createItem(long adminSeq, ItemDto itemDto) {
         log.info("createItem ::: {}", itemDto);
 
         ItemEntity item = ItemEntity.builder()
-                .adminNo(itemSeq)
+                .adminNo(adminSeq)
                 .categoryNo(itemDto.getCategorySeq())
                 .name(itemDto.getName())
                 .smallImage(itemDto.getSmallImage())
