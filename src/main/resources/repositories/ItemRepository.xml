@@ -30,4 +30,24 @@
                  , now()
                  )
     </insert>
+
+    <select id="selectItems" resultType="ItemEntity">
+        SELECT top #{pageRequest.pageSize}
+               item_no
+             , admin_no
+             , name
+             , status
+             , price
+             , remains
+             , fast_yn
+             , ad_yn
+             , md_recommend_yn
+             , reg_dt
+        FROM tb_item
+        WHERE 1=1
+          <if test='adminSeq != null'>
+            AND admin_no = #{adminSeq}
+          </if>
+            AND item_no <![CDATA[>=]]> #{pageRequest.startPage}
+    </select>
 </mapper>

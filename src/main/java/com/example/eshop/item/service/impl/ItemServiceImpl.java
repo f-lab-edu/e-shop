@@ -1,6 +1,7 @@
 package com.example.eshop.item.service.impl;
 
 import com.example.eshop.controller.dto.ItemDto;
+import com.example.eshop.controller.dto.PageRequestDto;
 import com.example.eshop.item.model.ItemEntity;
 import com.example.eshop.item.repository.ItemRepository;
 import com.example.eshop.item.service.ItemService;
@@ -8,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -19,7 +22,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public void createItem(long adminSeq, ItemDto itemDto) {
-        log.info("createItem ::: {}", itemDto);
+        log.info("createItem ::: {} {}", adminSeq, itemDto);
 
         ItemEntity item = ItemEntity.builder()
                 .adminNo(adminSeq)
@@ -35,5 +38,12 @@ public class ItemServiceImpl implements ItemService {
                 .build();
 
         itemRepository.insertItem(item);
+    }
+
+    @Override
+    public List<ItemDto> getItems(Long adminSeq, PageRequestDto pageRequest) {
+        log.info("createItem ::: {} {}", adminSeq, pageRequest);
+        List<ItemEntity> items = itemRepository.selectItems(adminSeq);
+        return null;
     }
 }
