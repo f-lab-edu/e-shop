@@ -31,6 +31,15 @@
                  )
     </insert>
 
+    <select id="getTotalCount" parameterType="Long" resultType="int">
+        SELECT COUNT(*)
+        FROM tb_item
+        WHERE 1=1
+        <if test='adminSeq != null'>
+            AND admin_no = #{adminSeq}
+        </if>
+    </select>
+
     <select id="selectItems" resultType="ItemEntity">
         SELECT item.item_no
         , item.admin_no

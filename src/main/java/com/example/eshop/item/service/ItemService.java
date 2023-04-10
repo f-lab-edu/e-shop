@@ -1,11 +1,11 @@
 package com.example.eshop.item.service;
 
+import com.example.eshop.common.dto.PageList;
 import com.example.eshop.controller.dto.ItemDto;
-import com.example.eshop.controller.dto.PageRequestDto;
-
-import java.util.List;
+import com.example.eshop.common.dto.PageRequestDto;
+import com.example.eshop.controller.dto.SimpleItemDto;
 
 public interface ItemService {
     void createItem(long adminSeq, ItemDto itemDto);
-    List<ItemDto> getItems(Long adminSeq, PageRequestDto pageRequest);
+    PageList<SimpleItemDto> getItems(Long adminSeq, PageRequestDto pageRequest);
 }

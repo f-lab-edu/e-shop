@@ -4,8 +4,8 @@ import com.example.eshop.admin.member.core.model.AdminUserEntity;
 import com.example.eshop.aop.admin.Admin;
 import com.example.eshop.aop.admin.AdminLoginCheck;
 import com.example.eshop.controller.dto.ItemDto;
-import com.example.eshop.controller.dto.PageList;
-import com.example.eshop.controller.dto.PageRequestDto;
+import com.example.eshop.common.dto.PageList;
+import com.example.eshop.common.dto.PageRequestDto;
 import com.example.eshop.controller.dto.SimpleItemDto;
 import com.example.eshop.item.service.ItemService;
 import lombok.RequiredArgsConstructor;
@@ -49,8 +49,7 @@ public class ItemController {
                                             PageRequestDto pageRequest) {
         log.info("getItems ::: {} {}", admin, pageRequest);
 
-        List<ItemDto> lists = itemService.getItems(admin.getAdminNo(), pageRequest);
-        return null;
+        return itemService.getItems(admin.getAdminNo(), pageRequest);
     }
 
 }

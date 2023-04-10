@@ -10,5 +10,6 @@ import java.util.List;
 @Repository
 public interface ItemRepository {
     void insertItem(ItemEntity item);
+    int getTotalCount(Long adminSeq);
     List<ItemEntity> selectItems(Long adminSeq);
 }
