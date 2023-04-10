@@ -32,22 +32,27 @@
     </insert>
 
     <select id="selectItems" resultType="ItemEntity">
-        SELECT top #{pageRequest.pageSize}
-               item_no
-             , admin_no
-             , name
-             , status
-             , price
-             , remains
-             , fast_yn
-             , ad_yn
-             , md_recommend_yn
-             , reg_dt
-        FROM tb_item
-        WHERE 1=1
-          <if test='adminSeq != null'>
-            AND admin_no = #{adminSeq}
-          </if>
-            AND item_no <![CDATA[>=]]> #{pageRequest.startPage}
+        SELECT item.item_no
+        , item.admin_no
+        , item.name
+        , item.status
+        , item.price
+        , item.remains
+        , item.fast_yn
+        , item.ad_yn
+        , item.md_recommend_yn
+        , item.reg_dt
+        FROM tb_item as item
+        JOIN (SELECT top #{pageRequest.pageSize} item_no
+                FROM tb_item
+               WHERE 1=1
+                <if test='adminSeq != null'>
+                    AND admin_no = #{adminSeq}
+                </if>
+                <if test='!pageRequest.isAsc'>
+                   AND item_no <![CDATA[>=]]> #{pageRequest.startPage}
+                </if>
+                ORDER BY item_no <if test='!pageRequest.isAsc'>DESC</if>
+            ) as idx on item.item_no = idx.item_no
     </select>
 </mapper>
