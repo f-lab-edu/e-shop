@@ -43,7 +43,7 @@
         , item.md_recommend_yn
         , item.reg_dt
         FROM tb_item as item
-        JOIN (SELECT top #{pageRequest.pageSize} item_no
+        JOIN (SELECT item_no
                 FROM tb_item
                WHERE 1=1
                 <if test='adminSeq != null'>
@@ -53,6 +53,7 @@
                    AND item_no <![CDATA[>=]]> #{pageRequest.startPage}
                 </if>
                 ORDER BY item_no <if test='!pageRequest.isAsc'>DESC</if>
+                LIMIT #{pageRequest.pageSize}
             ) as idx on item.item_no = idx.item_no
     </select>
 </mapper>
