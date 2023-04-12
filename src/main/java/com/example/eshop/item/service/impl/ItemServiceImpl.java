@@ -1,5 +1,7 @@
 package com.example.eshop.item.service.impl;
 
+import com.example.eshop.admin.member.core.model.AdminUserEntity;
+import com.example.eshop.admin.member.core.service.AdminMemberService;
 import com.example.eshop.common.dto.PageList;
 import com.example.eshop.controller.dto.DetailedItemDto;
 import com.example.eshop.controller.dto.ItemDto;
@@ -21,6 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
 
+    private final AdminMemberService adminMemberService;
     private final ItemRepository itemRepository;
 
     @Override
@@ -60,7 +63,8 @@ public class ItemServiceImpl implements ItemService {
         log.info("getItem ::: {}", itemSeq);
 
         ItemEntity item = itemRepository.selectItem(itemSeq);
-        // TODO : 상품 등록자 정보
-        return new DetailedItemDto();
+        AdminUserEntity seller = adminMemberService.getAdminUserByUserNo(item.getAdminNo());
+
+        return new DetailedItemDto(item, seller.getAdminId());
     }
 }
