@@ -3,6 +3,7 @@ package com.example.eshop.controller.v1.admin;
 import com.example.eshop.admin.member.core.model.AdminUserEntity;
 import com.example.eshop.aop.admin.Admin;
 import com.example.eshop.aop.admin.AdminLoginCheck;
+import com.example.eshop.controller.dto.DetailedItemDto;
 import com.example.eshop.controller.dto.ItemDto;
 import com.example.eshop.common.dto.PageList;
 import com.example.eshop.common.dto.PageRequestDto;
@@ -11,8 +12,6 @@ import com.example.eshop.item.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RestController("AdminItemController")
@@ -50,6 +49,21 @@ public class ItemController {
         log.info("getItems ::: {} {}", admin, pageRequest);
 
         return itemService.getItems(admin.getAdminNo(), pageRequest);
+    }
+
+    /**
+     * 상품 상세 조회
+     *
+     * @author hjkim
+     * @param itemSeq, admin
+     */
+    @AdminLoginCheck
+    @GetMapping(value="/{itemSeq}")
+    public DetailedItemDto getItem(@PathVariable long itemSeq,
+                                   @Admin AdminUserEntity admin) {
+        log.info("getItem ::: {} {}", itemSeq, admin);
+
+        return itemService.getItem(itemSeq);
     }
 
 }

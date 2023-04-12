@@ -1,6 +1,7 @@
 package com.example.eshop.item.service.impl;
 
 import com.example.eshop.common.dto.PageList;
+import com.example.eshop.controller.dto.DetailedItemDto;
 import com.example.eshop.controller.dto.ItemDto;
 import com.example.eshop.common.dto.PageRequestDto;
 import com.example.eshop.controller.dto.SimpleItemDto;
@@ -52,5 +53,14 @@ public class ItemServiceImpl implements ItemService {
         // TODO : 상품 등록자 아이디
         List<SimpleItemDto> simpleItems = new ArrayList<>();
         return new PageList<>(pageRequest.getPageSize(), totalCount, simpleItems);
+    }
+
+    @Override
+    public DetailedItemDto getItem(long itemSeq) {
+        log.info("getItem ::: {}", itemSeq);
+
+        ItemEntity item = itemRepository.selectItem(itemSeq);
+        // TODO : 상품 등록자 정보
+        return new DetailedItemDto();
     }
 }

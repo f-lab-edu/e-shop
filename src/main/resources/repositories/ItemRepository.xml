@@ -65,4 +65,28 @@
                 LIMIT #{pageRequest.pageSize}
             ) as idx on item.item_no = idx.item_no
     </select>
+
+    <select id="selectItem" parameterType="long" resultType="ItemEntity">
+        SELECT item_no
+             , category_no
+             , admin_no
+             , name
+             , status
+             , remains
+             , price
+             , intro
+             , big_image
+             , small_image
+             , cell_cnt
+             , likes
+             , content
+             , ad_yn
+             , md_recommend_yn
+             , fast_yn
+             , reg_dt
+             , upd_dt
+        FROM tb_item
+        WHERE 1=1
+          AND item_no = #{itemSeq}
+    </select>
 </mapper>
