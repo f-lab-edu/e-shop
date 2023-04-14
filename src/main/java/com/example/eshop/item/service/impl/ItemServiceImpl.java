@@ -65,6 +65,6 @@ public class ItemServiceImpl implements ItemService {
         ItemEntity item = itemRepository.selectItem(itemSeq);
         AdminUserEntity seller = adminMemberService.getAdminUserByUserNo(item.getAdminNo());
 
-        return new DetailedItemDto(item, seller.getAdminId());
+        return new DetailedItemDto(item, seller);
     }
 }

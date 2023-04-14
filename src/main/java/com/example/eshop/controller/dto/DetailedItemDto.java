@@ -1,5 +1,6 @@
 package com.example.eshop.controller.dto;
 
+import com.example.eshop.admin.member.core.model.AdminUserEntity;
 import com.example.eshop.item.model.ItemEntity;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -10,7 +11,10 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class DetailedItemDto {
     private long itemSeq;
+    private long sellerSeq;
     private String sellerId;
+    private long categorySeq;
+    private String categoryName;
     private String name;
     private String fastYn;
     private String smallImage;
@@ -27,9 +31,11 @@ public class DetailedItemDto {
     private LocalDate regDate;
     private LocalDate updDate;
 
-    public DetailedItemDto(ItemEntity item, String sellerId) {
+    public DetailedItemDto(ItemEntity item, AdminUserEntity seller) {
         this.itemSeq = item.getItemNo();
-        this.sellerId = sellerId;
+        this.sellerSeq = seller.getAdminNo();
+        this.sellerId = seller.getAdminId();
+        this.categorySeq = item.getCategoryNo();
         this.name = item.getName();
         this.fastYn = item.getFastYn();
         this.smallImage = item.getSmallImage();
