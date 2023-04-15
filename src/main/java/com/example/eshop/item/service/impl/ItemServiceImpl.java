@@ -67,4 +67,27 @@ public class ItemServiceImpl implements ItemService {
 
         return new DetailedItemDto(item, seller);
     }
+
+    @Override
+    public void modifyItem(long itemSeq, DetailedItemDto request) {
+        log.info("modifyItem ::: {} {}", itemSeq, request);
+
+        ItemEntity item = itemRepository.selectItem(itemSeq);
+        updateItemEntity(request, item);
+
+        itemRepository.updateItem(item);
+    }
+
+    private void updateItemEntity(DetailedItemDto request, ItemEntity item) {
+        item.setName(request.getName());
+        item.setRemains(request.getRemains());
+        item.setPrice(request.getPrice());
+        item.setIntro(request.getIntro());
+        item.setBigImage(request.getBigImage());
+        item.setSmallImage(request.getSmallImage());
+        item.setContent(request.getContent());
+        item.setAdYn(request.getAdYn());
+        item.setMdRecommendYn(request.getMdRecommendYn());
+        item.setFastYn(request.getFastYn());
+    }
 }

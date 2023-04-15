@@ -89,4 +89,21 @@
         WHERE 1=1
           AND item_no = #{itemSeq}
     </select>
+
+    <update id="updateItem" parameterType="ItemEntity">
+        UPDATE tb_item
+        SET name = #{name}
+        , remains = #{remains}
+        , price = #{price}
+        , intro = #{intro}
+        , big_image = #{bigImage}
+        , small_image = #{smallImage}
+        , content = #{content}
+        , ad_yn = #{adYn}
+        , md_recommend_yn = #{mdRecommendYn}
+        , fast_yn = #{fastYn}
+        , upd_dt = now()
+        WHERE 1=1
+          AND item_no = #{itemSeq}
+    </update>
 </mapper>

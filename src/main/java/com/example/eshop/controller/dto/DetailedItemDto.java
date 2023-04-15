@@ -2,11 +2,13 @@ package com.example.eshop.controller.dto;
 
 import com.example.eshop.admin.member.core.model.AdminUserEntity;
 import com.example.eshop.item.model.ItemEntity;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.LocalDate;
 
+@Getter
 @ToString
 @NoArgsConstructor
 public class DetailedItemDto {

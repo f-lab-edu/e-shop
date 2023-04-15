@@ -66,4 +66,20 @@ public class ItemController {
         return itemService.getItem(itemSeq);
     }
 
+    /**
+     * 상품 상세 수정
+     *
+     * @author hjkim
+     * @param itemSeq, admin
+     */
+    @AdminLoginCheck
+    @PutMapping(value="/{itemSeq}")
+    public void modifyItem(@PathVariable long itemSeq,
+                                      @Admin AdminUserEntity admin,
+                                      @RequestBody DetailedItemDto request) {
+        log.info("modifyItem ::: {} {} {}", itemSeq, admin, request);
+
+        itemService.modifyItem(itemSeq, request);
+    }
+
 }

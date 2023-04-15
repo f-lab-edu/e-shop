@@ -13,4 +13,5 @@ public interface ItemRepository {
     int getTotalCount(Long adminSeq);
     List<ItemEntity> selectItems(Long adminSeq);
     ItemEntity selectItem(long itemSeq);
+    void updateItem(ItemEntity item);
 }

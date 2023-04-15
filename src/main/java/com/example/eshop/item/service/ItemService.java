@@ -10,4 +10,5 @@ public interface ItemService {
     void createItem(long adminSeq, ItemDto itemDto);
     PageList<SimpleItemDto> getItems(Long adminSeq, PageRequestDto pageRequest);
     DetailedItemDto getItem(long itemSeq);
+    void modifyItem(long itemSeq, DetailedItemDto request);
 }
