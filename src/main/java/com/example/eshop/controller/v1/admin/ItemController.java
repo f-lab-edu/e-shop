@@ -82,4 +82,13 @@ public class ItemController {
         itemService.modifyItem(itemSeq, request);
     }
 
+    @AdminLoginCheck
+    @DeleteMapping(value="/{itemSeq}")
+    public void deleteItem(@PathVariable long itemSeq,
+                           @Admin AdminUserEntity admin) {
+        log.info("deleteItem ::: {} {}", itemSeq, admin);
+
+        itemService.deleteItem(itemSeq);
+    }
+
 }

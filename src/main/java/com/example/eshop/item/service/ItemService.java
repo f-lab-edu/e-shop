@@ -11,4 +11,5 @@ public interface ItemService {
     PageList<SimpleItemDto> getItems(Long adminSeq, PageRequestDto pageRequest);
     DetailedItemDto getItem(long itemSeq);
     void modifyItem(long itemSeq, DetailedItemDto request);
+    void deleteItem(long itemSeq);
 }

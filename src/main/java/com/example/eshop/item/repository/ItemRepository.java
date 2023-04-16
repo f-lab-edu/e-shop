@@ -14,4 +14,5 @@ public interface ItemRepository {
     List<ItemEntity> selectItems(Long adminSeq);
     ItemEntity selectItem(long itemSeq);
     void updateItem(ItemEntity item);
+    void deleteItem(long itemSeq);
 }

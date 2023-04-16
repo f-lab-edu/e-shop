@@ -106,4 +106,8 @@
         WHERE 1=1
           AND item_no = #{itemSeq}
     </update>
+
+    <delete id="deleteItem" parameterType="long">
+        delete from tb_item where item_no = #{itemSeq}
+    </delete>
 </mapper>

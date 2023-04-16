@@ -78,6 +78,13 @@ public class ItemServiceImpl implements ItemService {
         itemRepository.updateItem(item);
     }
 
+    @Override
+    public void deleteItem(long itemSeq) {
+        log.info("deleteItem ::: {}", itemSeq);
+
+        itemRepository.deleteItem(itemSeq);
+    }
+
     private void updateItemEntity(DetailedItemDto request, ItemEntity item) {
         item.setName(request.getName());
         item.setRemains(request.getRemains());
