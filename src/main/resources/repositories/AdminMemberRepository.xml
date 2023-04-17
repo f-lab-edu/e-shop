@@ -60,4 +60,20 @@
         WHERE 1=1
           AND admin_no = #{adminNo}
     </select>
+
+    <select id="findAdminUserListByUserNoList" parameterType="long" resultType="AdminUserEntity">
+        SELECT admin_no
+             , admin_id
+             , name
+             , status
+             , tel
+             , post_num
+             , address
+        FROM tb_admin
+        WHERE 1=1
+          AND admin_no in
+        <foreach collection="userNoList" item="adminNo" index="index" separator="," open="(" close=")">
+            #{adminNo}
+        </foreach>
+    </select>
 </mapper>

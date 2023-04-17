@@ -4,6 +4,8 @@ import com.example.eshop.admin.member.core.model.AdminUserEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Mapper
 @Repository
 public interface AdminMemberRepository {
@@ -11,4 +13,5 @@ public interface AdminMemberRepository {
     void insertAdminUserEntity(AdminUserEntity user);
     AdminUserEntity findAdminUserByAdminId(String adminId);
     AdminUserEntity findAdminUserByUserNo(long adminNo);
+    List<AdminUserEntity> findAdminUserListByUserNoList(List<Long> userNoList);
 }

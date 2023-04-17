@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -52,6 +53,9 @@ public class ItemServiceImpl implements ItemService {
         log.info("createItem ::: {} {}", adminSeq, pageRequest);
         int totalCount = itemRepository.getTotalCount(adminSeq);
         List<ItemEntity> items = itemRepository.selectItems(adminSeq);
+        List<Long> sellerSeqList = items.stream().map(ItemEntity::getAdminNo).distinct().collect(Collectors.toList());
+
+        List<AdminUserEntity> sellerList = adminMemberService.getAdminUserListByUserNo(sellerSeqList);
         
         // TODO : 상품 등록자 아이디
         List<SimpleItemDto> simpleItems = new ArrayList<>();
