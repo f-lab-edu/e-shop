@@ -69,6 +69,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    @Transactional
     public void modifyItem(long itemSeq, DetailedItemDto request) {
         log.info("modifyItem ::: {} {}", itemSeq, request);
 
@@ -79,6 +80,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    @Transactional
     public void deleteItem(long itemSeq) {
         log.info("deleteItem ::: {}", itemSeq);
 
