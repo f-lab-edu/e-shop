@@ -3,6 +3,7 @@ package com.example.eshop.item.service.impl;
 import com.example.eshop.admin.member.core.model.AdminUserEntity;
 import com.example.eshop.admin.member.core.service.AdminMemberService;
 import com.example.eshop.common.dto.PageList;
+import com.example.eshop.common.exception.DataNotFoundException;
 import com.example.eshop.controller.dto.DetailedItemDto;
 import com.example.eshop.controller.dto.ItemDto;
 import com.example.eshop.common.dto.PageRequestDto;
@@ -17,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -56,9 +59,14 @@ public class ItemServiceImpl implements ItemService {
         List<Long> sellerSeqList = items.stream().map(ItemEntity::getAdminNo).distinct().collect(Collectors.toList());
 
         List<AdminUserEntity> sellerList = adminMemberService.getAdminUserListByUserNo(sellerSeqList);
-        
-        // TODO : 상품 등록자 아이디
+        Map<Long, AdminUserEntity> sellerMap = sellerList.stream()
+                .collect(Collectors.toMap(AdminUserEntity::getAdminNo, Function.identity()));
+
         List<SimpleItemDto> simpleItems = new ArrayList<>();
+        for (ItemEntity item : items) {
+            SimpleItemDto simpleItem = new SimpleItemDto(item, sellerMap.get(item.getAdminNo()));
+            simpleItems.add(simpleItem);
+        }
         return new PageList<>(pageRequest.getPageSize(), totalCount, simpleItems);
     }
 
@@ -67,6 +75,8 @@ public class ItemServiceImpl implements ItemService {
         log.info("getItem ::: {}", itemSeq);
 
         ItemEntity item = itemRepository.selectItem(itemSeq);
+        checkItemExist(item);
+
         AdminUserEntity seller = adminMemberService.getAdminUserByUserNo(item.getAdminNo());
 
         return new DetailedItemDto(item, seller);
@@ -78,7 +88,9 @@ public class ItemServiceImpl implements ItemService {
         log.info("modifyItem ::: {} {}", itemSeq, request);
 
         ItemEntity item = itemRepository.selectItem(itemSeq);
-        updateItemEntity(request, item);
+        checkItemExist(item);
+
+        updateItemEntityParam(request, item);
 
         itemRepository.updateItem(item);
     }
@@ -91,7 +103,7 @@ public class ItemServiceImpl implements ItemService {
         itemRepository.deleteItem(itemSeq);
     }
 
-    private void updateItemEntity(DetailedItemDto request, ItemEntity item) {
+    private void updateItemEntityParam(DetailedItemDto request, ItemEntity item) {
         item.setName(request.getName());
         item.setRemains(request.getRemains());
         item.setPrice(request.getPrice());
@@ -102,5 +114,15 @@ public class ItemServiceImpl implements ItemService {
         item.setAdYn(request.getAdYn());
         item.setMdRecommendYn(request.getMdRecommendYn());
         item.setFastYn(request.getFastYn());
+    }
+
+    private void checkItemExist(ItemEntity item) {
+        if (item == null) {
+            throw new DataNotFoundException();
+        }
+
+        if (item.getAdminNo() == 0) {
+            throw new DataNotFoundException();
+        }
     }
 }
