@@ -75,8 +75,8 @@ public class ItemController {
     @AdminLoginCheck
     @PutMapping(value="/{itemSeq}")
     public void modifyItem(@PathVariable long itemSeq,
-                                      @Admin AdminUserEntity admin,
-                                      @RequestBody DetailedItemDto request) {
+                           @Admin AdminUserEntity admin,
+                           @RequestBody DetailedItemDto request) {
         log.info("modifyItem ::: {} {} {}", itemSeq, admin, request);
 
         itemService.modifyItem(itemSeq, request);

@@ -54,4 +54,30 @@ public class DetailedItemDto {
         this.regDate = item.getRegDt();
         this.updDate = item.getUpdDt();
     }
+
+    public DetailedItemDto(long categorySeq,
+                           String name,
+                           String fastYn,
+                           String smallImage,
+                           String bigImage,
+                           long price,
+                           String intro,
+                           String content,
+                           long remains,
+                           String status,
+                           String adYn,
+                           String mdRecommendYn) {
+        this.categorySeq = categorySeq;
+        this.name = name;
+        this.fastYn = fastYn;
+        this.smallImage = smallImage;
+        this.bigImage = bigImage;
+        this.price = price;
+        this.intro = intro;
+        this.content = content;
+        this.remains = remains;
+        this.status = status;
+        this.adYn = adYn;
+        this.mdRecommendYn = mdRecommendYn;
+    }
 }
