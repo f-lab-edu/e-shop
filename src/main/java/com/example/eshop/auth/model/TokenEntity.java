@@ -1,5 +1,6 @@
 package com.example.eshop.auth.model;
 
+import com.example.eshop.common.model.DateInfoEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
-public class TokenEntity {
+public class TokenEntity extends DateInfoEntity {
     private long tokenNo;
 
     private String userType;
@@ -26,11 +27,6 @@ public class TokenEntity {
 
     @Setter
     private LocalDateTime refreshExpireDt;
-
-    private LocalDateTime regDt;
-
-    private LocalDateTime updDt;
-
 
     public TokenEntity(long userNo,
                        String userType,

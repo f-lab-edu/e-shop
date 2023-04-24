@@ -1,15 +1,14 @@
 package com.example.eshop.item.model;
 
+import com.example.eshop.common.model.DateInfoEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
-
 @Getter
 @NoArgsConstructor
-public class ItemEntity {
+public class ItemEntity extends DateInfoEntity {
     private long itemNo;
     private Long categoryNo;
     private long adminNo;
@@ -52,9 +51,6 @@ public class ItemEntity {
 
     @Setter
     private String fastYn;
-
-    private LocalDate regDt;
-    private LocalDate updDt;
 
     @Builder
     public ItemEntity(long adminNo, Long categoryNo, String name, String smallImage,

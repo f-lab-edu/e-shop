@@ -1,5 +1,6 @@
 package com.example.eshop.admin.member.core.model;
 
+import com.example.eshop.common.model.DateInfoEntity;
 import com.example.eshop.common.type.MemberStatus;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +11,7 @@ import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
-public class AdminUserEntity {
+public class AdminUserEntity extends DateInfoEntity {
     private long adminNo;
 
     private String adminId;
@@ -40,11 +41,6 @@ public class AdminUserEntity {
 
     @Setter
     private LocalDate modifyPwDt;
-
-    private LocalDate regDt;
-
-    @Setter
-    private LocalDate updDt;
 
     @Builder
     public AdminUserEntity(String adminId, String name, String levelCd,

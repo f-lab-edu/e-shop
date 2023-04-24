@@ -1,5 +1,6 @@
 package com.example.eshop.member.core.model;
 
+import com.example.eshop.common.model.DateInfoEntity;
 import com.example.eshop.common.type.MemberStatus;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +11,7 @@ import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
-public class BuyerUserEntity {
+public class BuyerUserEntity extends DateInfoEntity {
     private long userNo;
 
     private String userId;
@@ -42,11 +43,6 @@ public class BuyerUserEntity {
     private LocalDate lastLoginDt;
 
     private LocalDate modifyPwDt;
-
-    private LocalDate regDt;
-
-    private LocalDate updDt;
-
 
     @Builder
     public BuyerUserEntity(String userId, String name, String joinCode,
