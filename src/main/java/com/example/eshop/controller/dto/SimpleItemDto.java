@@ -10,31 +10,56 @@ import java.time.LocalDate;
 @Getter
 @ToString
 public class SimpleItemDto {
-    private long itemSeq;
-    private String sellerId;
-    private String sellerName;
-    private String name;
-    private String status;
-    private long price;
-    private long remains;
-    private String fastYn;
-    private String adYn;
-    private String mdRcommendedYn;
-    private long salesAmount;
-    private LocalDate regDt;
+
+    private ItemEntity item;
+    private AdminUserEntity seller;
 
     public SimpleItemDto(ItemEntity item, AdminUserEntity seller) {
-        this.itemSeq = item.getItemNo();
-        this.sellerId = seller.getAdminId();
-        this.sellerName = seller.getName();
-        this.name = item.getName();
-        this.status = item.getStatus();
-        this.price = item.getPrice();
-        this.remains = item.getRemains();
-        this.fastYn = item.getFastYn();
-        this.adYn = item.getAdYn();
-        this.mdRcommendedYn = item.getMdRecommendYn();
-        this.salesAmount = item.getCellCnt();
-        this.regDt = item.getRegDt();
+        this.item = item;
+        this.seller = seller;
+    }
+
+    public long getItemSeq() {
+        return item.getItemNo();
+    }
+
+    public String getSellerId() {
+        return seller.getAdminId();
+    }
+
+    public String getSellerName() {
+        return seller.getName();
+    }
+
+    public String getStatus() {
+        return item.getStatus();
+    }
+
+    public long getPrice() {
+        return item.getPrice();
+    }
+
+    public long getRemain() {
+        return item.getRemains();
+    }
+
+    public String getFastYn() {
+        return item.getFastYn();
+    }
+
+    public String getAdYn() {
+        return item.getAdYn();
+    }
+
+    public String getMdRecommendedYn() {
+        return item.getMdRecommendYn();
+    }
+
+    public long getSalesAmount() {
+        return item.getCellCnt();
+    }
+
+    public LocalDate getRegDt() {
+        return item.getRegDt();
     }
 }
