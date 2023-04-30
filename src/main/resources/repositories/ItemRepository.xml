@@ -29,6 +29,10 @@
                  , now()
                  , now()
                  )
+        <selectKey keyProperty="itemNo"
+                   resultType="long" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
     </insert>
 
     <select id="getTotalCount" parameterType="Long" resultType="int">

@@ -29,11 +29,11 @@ public class ItemController {
      */
     @AdminLoginCheck
     @PostMapping(value="")
-    public void createItem(@Admin AdminUserEntity admin,
+    public SimpleItemDto createItem(@Admin AdminUserEntity admin,
                            @RequestBody ItemDto item) {
         log.info("createItem ::: {} {}", admin, item);
 
-        itemService.createItem(admin.getAdminNo(), item);
+        return itemService.createItem(admin.getAdminNo(), item);
     }
 
     /**

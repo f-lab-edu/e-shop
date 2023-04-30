@@ -7,7 +7,7 @@ import com.example.eshop.common.dto.PageRequestDto;
 import com.example.eshop.controller.dto.SimpleItemDto;
 
 public interface ItemService {
-    void createItem(long adminSeq, ItemDto itemDto);
+    SimpleItemDto createItem(long adminSeq, ItemDto itemDto);
     PageList<SimpleItemDto> getItems(Long adminSeq, PageRequestDto pageRequest);
     DetailedItemDto getItem(long itemSeq);
     void modifyItem(long itemSeq, DetailedItemDto request);

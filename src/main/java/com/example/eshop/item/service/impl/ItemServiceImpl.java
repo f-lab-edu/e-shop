@@ -32,7 +32,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public void createItem(long adminSeq, ItemDto itemDto) {
+    public SimpleItemDto createItem(long adminSeq, ItemDto itemDto) {
         log.info("createItem ::: {} {}", adminSeq, itemDto);
 
         ItemEntity item = ItemEntity.builder()
@@ -48,7 +48,11 @@ public class ItemServiceImpl implements ItemService {
                 .fastYn(itemDto.getFastYn())
                 .build();
 
+        AdminUserEntity seller = adminMemberService.getAdminUserByUserNo(item.getAdminNo());
+
         itemRepository.insertItem(item);
+
+        return new SimpleItemDto(item, seller);
     }
 
     @Override

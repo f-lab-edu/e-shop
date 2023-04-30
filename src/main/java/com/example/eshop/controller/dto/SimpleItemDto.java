@@ -5,7 +5,7 @@ import com.example.eshop.item.model.ItemEntity;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @ToString
@@ -59,7 +59,7 @@ public class SimpleItemDto {
         return item.getCellCnt();
     }
 
-    public LocalDate getRegDt() {
+    public LocalDateTime getRegDt() {
         return item.getRegDt();
     }
 }

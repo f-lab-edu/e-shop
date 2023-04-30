@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @ToString
@@ -30,8 +30,8 @@ public class DetailedItemDto {
     private String mdRecommendYn;
     private long cellCount;
     private long likes;
-    private LocalDate regDate;
-    private LocalDate updDate;
+    private LocalDateTime regDate;
+    private LocalDateTime updDate;
 
     public DetailedItemDto(ItemEntity item, AdminUserEntity seller) {
         this.itemSeq = item.getItemNo();
