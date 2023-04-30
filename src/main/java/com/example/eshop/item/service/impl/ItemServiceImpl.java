@@ -63,17 +63,19 @@ public class ItemServiceImpl implements ItemService {
     public PageList<SimpleItemDto> getItems(Long adminSeq, PageRequestDto pageRequest) {
         log.info("createItem ::: {} {}", adminSeq, pageRequest);
         int totalCount = itemRepository.getTotalCount(adminSeq);
-        List<ItemEntity> items = itemRepository.selectItems(adminSeq);
+        List<ItemEntity> items = itemRepository.selectItems(adminSeq, pageRequest);
         List<Long> sellerSeqList = items.stream().map(ItemEntity::getAdminNo).distinct().collect(Collectors.toList());
 
-        List<AdminUserEntity> sellerList = adminMemberService.getAdminUserListByUserNo(sellerSeqList);
-        Map<Long, AdminUserEntity> sellerMap = sellerList.stream()
-                .collect(Collectors.toMap(AdminUserEntity::getAdminNo, Function.identity()));
-
         List<SimpleItemDto> simpleItems = new ArrayList<>();
-        for (ItemEntity item : items) {
-            SimpleItemDto simpleItem = new SimpleItemDto(item, sellerMap.get(item.getAdminNo()));
-            simpleItems.add(simpleItem);
+        if (!sellerSeqList.isEmpty()) {
+            List<AdminUserEntity> sellerList = adminMemberService.getAdminUserListByUserNo(sellerSeqList);
+            Map<Long, AdminUserEntity> sellerMap = sellerList.stream()
+                    .collect(Collectors.toMap(AdminUserEntity::getAdminNo, Function.identity()));
+
+            for (ItemEntity item : items) {
+                SimpleItemDto simpleItem = new SimpleItemDto(item, sellerMap.get(item.getAdminNo()));
+                simpleItems.add(simpleItem);
+            }
         }
         return new PageList<>(pageRequest.getPageSize(), totalCount, simpleItems);
     }
