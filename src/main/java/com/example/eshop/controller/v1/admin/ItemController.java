@@ -4,9 +4,10 @@ import com.example.eshop.admin.member.core.model.AdminUserEntity;
 import com.example.eshop.aop.admin.Admin;
 import com.example.eshop.aop.admin.AdminLoginCheck;
 import com.example.eshop.controller.dto.DetailedItemDto;
-import com.example.eshop.controller.dto.ItemDto;
+import com.example.eshop.controller.dto.ItemCreationDto;
 import com.example.eshop.common.dto.PageList;
 import com.example.eshop.common.dto.PageRequestDto;
+import com.example.eshop.controller.dto.ItemModificationDto;
 import com.example.eshop.controller.dto.SimpleItemDto;
 import com.example.eshop.item.service.ItemService;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ public class ItemController {
     @AdminLoginCheck
     @PostMapping(value="")
     public SimpleItemDto createItem(@Admin AdminUserEntity admin,
-                           @RequestBody ItemDto item) {
+                           @RequestBody ItemCreationDto item) {
         log.info("createItem ::: {} {}", admin, item);
 
         return itemService.createItem(admin.getAdminNo(), item);
@@ -76,7 +77,7 @@ public class ItemController {
     @PutMapping(value="/{itemSeq}")
     public void modifyItem(@PathVariable long itemSeq,
                            @Admin AdminUserEntity admin,
-                           @RequestBody DetailedItemDto request) {
+                           @RequestBody ItemModificationDto request) {
         log.info("modifyItem ::: {} {} {}", itemSeq, admin, request);
 
         itemService.modifyItem(itemSeq, request);

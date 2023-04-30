@@ -12,72 +12,90 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 public class DetailedItemDto {
-    private long itemSeq;
-    private long sellerSeq;
-    private String sellerId;
-    private long categorySeq;
-    private String categoryName;
-    private String name;
-    private String fastYn;
-    private String smallImage;
-    private String bigImage;
-    private long price;
-    private String intro;
-    private String content;
-    private long remains;
-    private String status;
-    private String adYn;
-    private String mdRecommendYn;
-    private long cellCount;
-    private long likes;
-    private LocalDateTime regDate;
-    private LocalDateTime updDate;
+    private ItemEntity item;
+    private AdminUserEntity seller;
 
-    public DetailedItemDto(ItemEntity item, AdminUserEntity seller) {
-        this.itemSeq = item.getItemNo();
-        this.sellerSeq = seller.getAdminNo();
-        this.sellerId = seller.getAdminId();
-        this.categorySeq = item.getCategoryNo();
-        this.name = item.getName();
-        this.fastYn = item.getFastYn();
-        this.smallImage = item.getSmallImage();
-        this.bigImage = item.getBigImage();
-        this.price = item.getPrice();
-        this.intro = item.getIntro();
-        this.content = item.getContent();
-        this.remains = item.getRemains();
-        this.status = item.getStatus();
-        this.adYn = item.getAdYn();
-        this.mdRecommendYn = item.getMdRecommendYn();
-        this.cellCount = item.getCellCnt();
-        this.likes = item.getLikes();
-        this.regDate = item.getRegDt();
-        this.updDate = item.getUpdDt();
+    // TODO : categoryName
+
+    public DetailedItemDto(ItemEntity item
+            , AdminUserEntity seller) {
+        this.item = item;
+        this.seller = seller;
     }
 
-    public DetailedItemDto(long categorySeq,
-                           String name,
-                           String fastYn,
-                           String smallImage,
-                           String bigImage,
-                           long price,
-                           String intro,
-                           String content,
-                           long remains,
-                           String status,
-                           String adYn,
-                           String mdRecommendYn) {
-        this.categorySeq = categorySeq;
-        this.name = name;
-        this.fastYn = fastYn;
-        this.smallImage = smallImage;
-        this.bigImage = bigImage;
-        this.price = price;
-        this.intro = intro;
-        this.content = content;
-        this.remains = remains;
-        this.status = status;
-        this.adYn = adYn;
-        this.mdRecommendYn = mdRecommendYn;
+    public long getItemSeq() {
+        return item.getItemNo();
+    }
+
+    public long getSellerSeq() {
+        return seller.getAdminNo();
+    }
+
+    public String getSellerId() {
+        return seller.getAdminId();
+    }
+
+    public long getCategorySeq() {
+        return item.getCategoryNo();
+    }
+
+    public String getName() {
+        return item.getName();
+    }
+
+    public String getFastYn() {
+        return item.getFastYn();
+    }
+
+    public String getSmallIamge() {
+        return item.getSmallImage();
+    }
+
+    public String getBigImage() {
+        return item.getBigImage();
+    }
+
+    public long getPrice() {
+        return item.getPrice();
+    }
+
+    public String getIntro() {
+        return item.getIntro();
+    }
+
+    public String getContent() {
+        return item.getContent();
+    }
+
+    public long getRemains() {
+        return item.getRemains();
+    }
+
+    public String getStatus() {
+        return item.getStatus();
+    }
+
+    public String getAdYn() {
+        return item.getAdYn();
+    }
+
+    public String getMdRecommendYn() {
+        return item.getMdRecommendYn();
+    }
+
+    public long getCellCount() {
+        return item.getCellCnt();
+    }
+
+    public long getLikes() {
+        return item.getLikes();
+    }
+
+    public LocalDateTime getRegDate() {
+        return item.getRegDt();
+    }
+
+    public LocalDateTime getUpdDate() {
+        return item.getUpdDt();
     }
 }

@@ -5,8 +5,9 @@ import com.example.eshop.admin.member.core.service.AdminMemberService;
 import com.example.eshop.common.dto.PageList;
 import com.example.eshop.common.exception.DataNotFoundException;
 import com.example.eshop.controller.dto.DetailedItemDto;
-import com.example.eshop.controller.dto.ItemDto;
+import com.example.eshop.controller.dto.ItemCreationDto;
 import com.example.eshop.common.dto.PageRequestDto;
+import com.example.eshop.controller.dto.ItemModificationDto;
 import com.example.eshop.controller.dto.SimpleItemDto;
 import com.example.eshop.item.model.ItemEntity;
 import com.example.eshop.item.repository.ItemRepository;
@@ -32,20 +33,20 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public SimpleItemDto createItem(long adminSeq, ItemDto itemDto) {
-        log.info("createItem ::: {} {}", adminSeq, itemDto);
+    public SimpleItemDto createItem(long adminSeq, ItemCreationDto itemCreationDto) {
+        log.info("createItem ::: {} {}", adminSeq, itemCreationDto);
 
         ItemEntity item = ItemEntity.builder()
                 .adminNo(adminSeq)
-                .categoryNo(itemDto.getCategorySeq())
-                .name(itemDto.getName())
-                .smallImage(itemDto.getSmallImage())
-                .bigImage(itemDto.getBigImage())
-                .price(itemDto.getPrice())
-                .intro(itemDto.getIntro())
-                .content(itemDto.getContent())
-                .remains(itemDto.getRemains())
-                .fastYn(itemDto.getFastYn())
+                .categoryNo(itemCreationDto.getCategorySeq())
+                .name(itemCreationDto.getName())
+                .smallImage(itemCreationDto.getSmallImage())
+                .bigImage(itemCreationDto.getBigImage())
+                .price(itemCreationDto.getPrice())
+                .intro(itemCreationDto.getIntro())
+                .content(itemCreationDto.getContent())
+                .remains(itemCreationDto.getRemains())
+                .fastYn(itemCreationDto.getFastYn())
                 .build();
 
         AdminUserEntity seller = adminMemberService.getAdminUserByUserNo(item.getAdminNo());
@@ -88,7 +89,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public void modifyItem(long itemSeq, DetailedItemDto request) {
+    public void modifyItem(long itemSeq, ItemModificationDto request) {
         log.info("modifyItem ::: {} {}", itemSeq, request);
 
         ItemEntity item = itemRepository.selectItem(itemSeq);
@@ -107,7 +108,7 @@ public class ItemServiceImpl implements ItemService {
         itemRepository.deleteItem(itemSeq);
     }
 
-    private void updateItemEntityParam(DetailedItemDto request, ItemEntity item) {
+    private void updateItemEntityParam(ItemModificationDto request, ItemEntity item) {
         item.setName(request.getName());
         item.setRemains(request.getRemains());
         item.setPrice(request.getPrice());

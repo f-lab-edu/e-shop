@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class ItemDto {
+public class ItemCreationDto {
     private Long categorySeq;
     private String name;
     private String smallImage;
