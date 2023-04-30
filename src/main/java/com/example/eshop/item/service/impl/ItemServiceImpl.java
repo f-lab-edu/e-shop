@@ -1,5 +1,7 @@
 package com.example.eshop.item.service.impl;
 
+import com.example.eshop.admin.category.model.CategoryEntity;
+import com.example.eshop.admin.category.service.CategoryService;
 import com.example.eshop.admin.member.core.model.AdminUserEntity;
 import com.example.eshop.admin.member.core.service.AdminMemberService;
 import com.example.eshop.common.dto.PageList;
@@ -29,6 +31,7 @@ import java.util.stream.Collectors;
 public class ItemServiceImpl implements ItemService {
 
     private final AdminMemberService adminMemberService;
+    private final CategoryService categoryService;
     private final ItemRepository itemRepository;
 
     @Override
@@ -84,7 +87,9 @@ public class ItemServiceImpl implements ItemService {
 
         AdminUserEntity seller = adminMemberService.getAdminUserByUserNo(item.getAdminNo());
 
-        return new DetailedItemDto(item, seller);
+        CategoryEntity category = categoryService.getCategoryByCategoryNo(item.getCategoryNo());
+
+        return new DetailedItemDto(item, seller, category);
     }
 
     @Override

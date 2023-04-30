@@ -1,5 +1,6 @@
 package com.example.eshop.controller.dto;
 
+import com.example.eshop.admin.category.model.CategoryEntity;
 import com.example.eshop.admin.member.core.model.AdminUserEntity;
 import com.example.eshop.item.model.ItemEntity;
 import lombok.Getter;
@@ -14,13 +15,14 @@ import java.time.LocalDateTime;
 public class DetailedItemDto {
     private ItemEntity item;
     private AdminUserEntity seller;
-
-    // TODO : categoryName
+    private CategoryEntity category;
 
     public DetailedItemDto(ItemEntity item
-            , AdminUserEntity seller) {
+            , AdminUserEntity seller
+            , CategoryEntity category) {
         this.item = item;
         this.seller = seller;
+        this.category = category;
     }
 
     public long getItemSeq() {
@@ -37,6 +39,10 @@ public class DetailedItemDto {
 
     public long getCategorySeq() {
         return item.getCategoryNo();
+    }
+
+    public String getCategoryName() {
+        return category.getCategoryNm();
     }
 
     public String getName() {
