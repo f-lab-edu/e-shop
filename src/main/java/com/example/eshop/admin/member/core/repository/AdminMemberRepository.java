@@ -12,6 +12,6 @@ public interface AdminMemberRepository {
     boolean isDuplicatedId(String userId);
     void insertAdminUserEntity(AdminUserEntity user);
     AdminUserEntity findAdminUserByAdminId(String adminId);
-    AdminUserEntity findAdminUserByUserNo(long adminNo);
+    AdminUserEntity findAdminUserByAdminNo(long adminNo);
     List<AdminUserEntity> findAdminUserListByUserNoList(List<Long> userNoList);
 }

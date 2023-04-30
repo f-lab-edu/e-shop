@@ -54,7 +54,7 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 
     @Override
     public AdminUserEntity getAdminUserByUserNo(long userNo) {
-        AdminUserEntity user = adminMemberRepository.findAdminUserByUserNo(userNo);
+        AdminUserEntity user = adminMemberRepository.findAdminUserByAdminNo(userNo);
         checkUserExist(user);
         return user;
     }
