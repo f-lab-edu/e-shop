@@ -81,7 +81,7 @@
              , intro
              , big_image
              , small_image
-             , cell_cnt
+             , sell_cnt
              , likes
              , content
              , ad_yn

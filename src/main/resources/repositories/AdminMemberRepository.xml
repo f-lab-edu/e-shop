@@ -42,6 +42,9 @@
     <select id="findAdminUserByAdminId" parameterType="String" resultType="AdminUserEntity">
         SELECT admin_no
              , admin_id
+             , name
+             , status
+             , level_cd
              , password
         FROM tb_admin
         WHERE 1=1
@@ -53,6 +56,7 @@
              , admin_id
              , name
              , status
+             , level_cd
              , tel
              , post_num
              , address

@@ -82,8 +82,7 @@ public class AdminMemberServiceImpl implements AdminMemberService {
             throw new AccessForbiddenException();
         }
 
-        if (!user.getLevelCd().equals(MemberType.SELLER.getCode())
-                && !user.getLevelCd().equals(MemberType.ADMIN.getCode())) {
+        if (user.getLevelCd().equals(MemberType.BUYER.getCode())) {
             throw new AccessForbiddenException();
         }
     }

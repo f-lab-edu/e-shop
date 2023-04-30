@@ -45,7 +45,7 @@ class ItemControllerTest {
                 new LoginDto("master", "asdf")
         );
 
-        String loginResult = mvc.perform(post("/v1/auth/login")
+        String loginResult = mvc.perform(post("/v1/admin/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("utf-8")
                 .content(reqBody))
