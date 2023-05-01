@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -52,9 +54,14 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 
     @Override
     public AdminUserEntity getAdminUserByUserNo(long userNo) {
-        AdminUserEntity user = adminMemberRepository.findAdminUserByUserNo(userNo);
+        AdminUserEntity user = adminMemberRepository.findAdminUserByAdminNo(userNo);
         checkUserExist(user);
         return user;
+    }
+
+    @Override
+    public List<AdminUserEntity> getAdminUserListByUserNo(List<Long> userNoList) {
+        return adminMemberRepository.findAdminUserListByUserNoList(userNoList);
     }
 
 
@@ -75,8 +82,7 @@ public class AdminMemberServiceImpl implements AdminMemberService {
             throw new AccessForbiddenException();
         }
 
-        if (!user.getLevelCd().equals(MemberType.SELLER.getCode())
-                && !user.getLevelCd().equals(MemberType.ADMIN.getCode())) {
+        if (user.getLevelCd().equals(MemberType.BUYER.getCode())) {
             throw new AccessForbiddenException();
         }
     }

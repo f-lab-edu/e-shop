@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.eshop.item.repository.ItemRepository">
+    <insert id="insertItem" parameterType="ItemEntity">
+        INSERT INTO tb_item (
+                                admin_no
+                              , category_no
+                              , name
+                              , small_image
+                              , big_image
+                              , price
+                              , intro
+                              , content
+                              , remains
+                              , fast_yn
+                              , reg_dt
+                              , upd_dt
+        ) VALUES (
+                     #{adminNo}
+                 , #{categoryNo}
+                 , #{name}
+                 , #{smallImage}
+                 , #{bigImage}
+                 , #{price}
+                 , #{intro}
+                 , #{content}
+                 , #{remains}
+                 , #{fastYn}
+                 , now()
+                 , now()
+                 )
+        <selectKey keyProperty="itemNo"
+                   resultType="long" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <select id="getTotalCount" parameterType="Long" resultType="int">
+        SELECT COUNT(*)
+        FROM tb_item
+        WHERE 1=1
+        <if test='adminSeq != null'>
+            AND admin_no = #{adminSeq}
+        </if>
+    </select>
+
+    <select id="selectItems" resultType="ItemEntity">
+        SELECT item.item_no
+        , item.admin_no
+        , item.name
+        , item.status
+        , item.price
+        , item.remains
+        , item.fast_yn
+        , item.ad_yn
+        , item.md_recommend_yn
+        , item.reg_dt
+        FROM tb_item as item
+        JOIN (SELECT item_no
+                FROM tb_item
+               WHERE 1=1
+                <if test='adminSeq != null'>
+                    AND admin_no = #{adminSeq}
+                </if>
+                <if test='!pageRequest.isAsc'>
+                   AND item_no <![CDATA[>=]]> #{pageRequest.startPage}
+                </if>
+                ORDER BY item_no <if test='!pageRequest.isAsc'>DESC</if>
+                LIMIT #{pageRequest.pageSize}
+            ) as idx on item.item_no = idx.item_no
+    </select>
+
+    <select id="selectItem" parameterType="long" resultType="ItemEntity">
+        SELECT item_no
+             , category_no
+             , admin_no
+             , name
+             , status
+             , remains
+             , price
+             , intro
+             , big_image
+             , small_image
+             , sell_cnt
+             , likes
+             , content
+             , ad_yn
+             , md_recommend_yn
+             , fast_yn
+             , reg_dt
+             , upd_dt
+        FROM tb_item
+        WHERE 1=1
+          AND item_no = #{itemSeq}
+    </select>
+
+    <update id="updateItem" parameterType="ItemEntity">
+        UPDATE tb_item
+        SET name = #{name}
+        , remains = #{remains}
+        , price = #{price}
+        , intro = #{intro}
+        , big_image = #{bigImage}
+        , small_image = #{smallImage}
+        , content = #{content}
+        , ad_yn = #{adYn}
+        , md_recommend_yn = #{mdRecommendYn}
+        , fast_yn = #{fastYn}
+        , upd_dt = now()
+        WHERE 1=1
+          AND item_no = #{itemSeq}
+    </update>
+
+    <delete id="deleteItem" parameterType="long">
+        delete from tb_item where item_no = #{itemSeq}
+    </delete>
+</mapper>
