@@ -3,6 +3,8 @@ package com.example.eshop.controller.v1.admin;
 import com.example.eshop.admin.member.core.model.AdminUserEntity;
 import com.example.eshop.aop.admin.Admin;
 import com.example.eshop.aop.admin.AdminLoginCheck;
+import com.example.eshop.common.exception.AccessForbiddenException;
+import com.example.eshop.common.type.MemberType;
 import com.example.eshop.controller.dto.DetailedItemDto;
 import com.example.eshop.controller.dto.ItemCreationDto;
 import com.example.eshop.common.dto.PageList;
@@ -80,6 +82,8 @@ public class ItemController {
                            @RequestBody ItemModificationDto request) {
         log.info("modifyItem ::: {} {} {}", itemSeq, admin, request);
 
+        checkHasAuthority(itemSeq, admin);
+
         itemService.modifyItem(itemSeq, request);
     }
 
@@ -89,7 +93,23 @@ public class ItemController {
                            @Admin AdminUserEntity admin) {
         log.info("deleteItem ::: {} {}", itemSeq, admin);
 
+        checkHasAuthority(itemSeq, admin);
+
         itemService.deleteItem(itemSeq);
+    }
+
+    private void checkHasAuthority(long itemSeq, AdminUserEntity admin) {
+        if (admin.getLevelCd().equals(MemberType.BUYER.getCode())) {
+            throw new AccessForbiddenException();
+        }
+
+        if (admin.getLevelCd().equals(MemberType.SELLER.getCode())) {
+            DetailedItemDto item = itemService.getItem(itemSeq);
+
+            if (item.getSellerSeq() != admin.getAdminNo()) {
+                throw new AccessForbiddenException();
+            }
+        }
     }
 
 }
