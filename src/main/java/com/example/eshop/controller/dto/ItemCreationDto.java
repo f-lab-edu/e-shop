@@ -13,8 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class ItemCreationDto {
     private Long categorySeq;
     private String name;
-    private MultipartFile smallImage;
-    private MultipartFile bigImage;
     private long price;
     private String intro;
     private String content;

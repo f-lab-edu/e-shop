@@ -13,8 +13,6 @@ public class ItemModificationDto {
     private long remains;
     private long price;
     private String intro;
-    private MultipartFile bigImage;
-    private MultipartFile smallImage;
     private String content;
     private String adYn;
     private String mdRecommendYn;

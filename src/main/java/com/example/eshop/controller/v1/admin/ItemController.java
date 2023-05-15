@@ -14,7 +14,11 @@ import com.example.eshop.controller.dto.SimpleItemDto;
 import com.example.eshop.item.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Slf4j
 @RestController("AdminItemController")
@@ -33,10 +37,12 @@ public class ItemController {
     @AdminLoginCheck
     @PostMapping(value="")
     public SimpleItemDto createItem(@Admin AdminUserEntity admin,
-                           @RequestBody ItemCreationDto item) {
-        log.info("createItem ::: {} {}", admin, item);
+                                    @RequestPart ItemCreationDto item,
+                                    @RequestPart MultipartFile bigImage,
+                                    @RequestPart MultipartFile smallImage) {
+        log.info("createItem ::: {} {} {} {}", admin, item, bigImage, smallImage);
 
-        return itemService.createItem(admin.getAdminNo(), item);
+        return itemService.createItem(admin.getAdminNo(), item, bigImage, smallImage);
     }
 
     /**
@@ -79,12 +85,14 @@ public class ItemController {
     @PutMapping(value="/{itemSeq}")
     public void modifyItem(@PathVariable long itemSeq,
                            @Admin AdminUserEntity admin,
-                           @RequestBody ItemModificationDto request) {
-        log.info("modifyItem ::: {} {} {}", itemSeq, admin, request);
+                           @RequestPart ItemModificationDto request,
+                           @RequestPart MultipartFile bigImage,
+                           @RequestPart MultipartFile smallImage) {
+        log.info("modifyItem ::: {} {} {} {} {}", itemSeq, admin, request, bigImage, smallImage);
 
         checkHasAuthority(itemSeq, admin);
 
-        itemService.modifyItem(itemSeq, request);
+        itemService.modifyItem(itemSeq, request, bigImage, smallImage);
     }
 
     @AdminLoginCheck

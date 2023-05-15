@@ -14,9 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.mock.web.MockPart;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -64,8 +68,6 @@ class ItemControllerTest {
     void createItem() throws Exception {
         String content = objectMapper.writeValueAsString(
                 new ItemCreationDto(3L, "상품1",
-                        "smallImageAddress",
-                        "bigImageAddress",
                         10000,
                         "상품1 짧은 글 소개",
                         "상품사진 및 설명글",
@@ -73,10 +75,14 @@ class ItemControllerTest {
                         "Y")
         );
 
-        mvc.perform(post("/v1/admin/items")
+        MockMultipartFile bigImage = new MockMultipartFile("bigImage", "foo".getBytes(StandardCharsets.UTF_8));
+        MockMultipartFile smallImage = new MockMultipartFile("bigImage", "foo".getBytes(StandardCharsets.UTF_8));
+
+
+        mvc.perform(multipart("/v1/admin/items")
+                        .file(bigImage).part(new MockPart("bigImage", "foo".getBytes(StandardCharsets.UTF_8)))
+                        .file(smallImage).part(new MockPart("smallImage", "foo".getBytes(StandardCharsets.UTF_8)))
                         .header(TokenType.ACCESS.getHeaderName(), this.accessToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .characterEncoding("utf-8")
                         .content(content))
                 .andExpect(status().isOk())
                 .andDo(print());
@@ -115,18 +121,19 @@ class ItemControllerTest {
                         10,
                         100000,
                         "상품1 짧은 글 소개 : updated",
-                        "bigImageAddressFixed",
-                        "smallImageAddressFixed",
                         "상품사진 및 설명글 : updated",
                         "Y",
                         "Y",
                         "Y")
         );
 
-        mvc.perform(put("/v1/admin/items/1")
+        MockMultipartFile bigImage = new MockMultipartFile("bigImage", "foo".getBytes(StandardCharsets.UTF_8));
+        MockMultipartFile smallImage = new MockMultipartFile("bigImage", "foo".getBytes(StandardCharsets.UTF_8));
+
+        mvc.perform(multipart("/v1/admin/items/1")
+                        .file(bigImage).part(new MockPart("bigImage", "foo".getBytes(StandardCharsets.UTF_8)))
+                        .file(smallImage).part(new MockPart("smallImage", "foo".getBytes(StandardCharsets.UTF_8)))
                         .header(TokenType.ACCESS.getHeaderName(), this.accessToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .characterEncoding("utf-8")
                         .content(content))
                 .andExpect(status().isOk())
                 .andDo(print());
