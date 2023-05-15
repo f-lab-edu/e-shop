@@ -16,9 +16,13 @@ import com.example.eshop.item.repository.ItemRepository;
 import com.example.eshop.item.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -34,17 +38,21 @@ public class ItemServiceImpl implements ItemService {
     private final CategoryService categoryService;
     private final ItemRepository itemRepository;
 
+    @Value("${item.big-image-file.path}")
+    String bigImageFilePath;
+
+    @Value("${item.small-image-file.path}")
+    String smallImageFilePath;
+
     @Override
     @Transactional
-    public SimpleItemDto createItem(long adminSeq, ItemCreationDto itemCreationDto) {
+    public SimpleItemDto createItem(long adminSeq, ItemCreationDto itemCreationDto) throws IOException {
         log.info("createItem ::: {} {}", adminSeq, itemCreationDto);
 
         ItemEntity item = ItemEntity.builder()
                 .adminNo(adminSeq)
                 .categoryNo(itemCreationDto.getCategorySeq())
                 .name(itemCreationDto.getName())
-                .smallImage(itemCreationDto.getSmallImage())
-                .bigImage(itemCreationDto.getBigImage())
                 .price(itemCreationDto.getPrice())
                 .intro(itemCreationDto.getIntro())
                 .content(itemCreationDto.getContent())
@@ -55,6 +63,8 @@ public class ItemServiceImpl implements ItemService {
         AdminUserEntity seller = adminMemberService.getAdminUserByUserNo(item.getAdminNo());
 
         itemRepository.insertItem(item);
+        saveImage(bigImageFilePath + "/" + item.getItemNo(), itemCreationDto.getBigImage());
+        saveImage(smallImageFilePath + "/" + item.getItemNo(), itemCreationDto.getSmallImage());
 
         return new SimpleItemDto(item, seller);
     }
@@ -96,13 +106,15 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public void modifyItem(long itemSeq, ItemModificationDto request) {
+    public void modifyItem(long itemSeq, ItemModificationDto request) throws IOException {
         log.info("modifyItem ::: {} {}", itemSeq, request);
 
         ItemEntity item = itemRepository.selectItem(itemSeq);
         checkItemExist(item);
 
         updateItemEntityParam(request, item);
+        saveImage(bigImageFilePath + "/" + item.getItemNo(), request.getBigImage());
+        saveImage(smallImageFilePath + "/" + item.getItemNo(), request.getSmallImage());
 
         itemRepository.updateItem(item);
     }
@@ -115,13 +127,25 @@ public class ItemServiceImpl implements ItemService {
         itemRepository.deleteItem(itemSeq);
     }
 
+    private void saveImage(String filePath, MultipartFile image) throws IOException {
+        if (image.isEmpty()) {
+            throw new DataNotFoundException();
+        }
+
+        File file = new File(filePath);
+        if (file.exists()) {
+            file.delete();
+        }
+
+        file.createNewFile();
+        image.transferTo(file);
+    }
+
     private void updateItemEntityParam(ItemModificationDto request, ItemEntity item) {
         item.setName(request.getName());
         item.setRemains(request.getRemains());
         item.setPrice(request.getPrice());
         item.setIntro(request.getIntro());
-        item.setBigImage(request.getBigImage());
-        item.setSmallImage(request.getSmallImage());
         item.setContent(request.getContent());
         item.setAdYn(request.getAdYn());
         item.setMdRecommendYn(request.getMdRecommendYn());

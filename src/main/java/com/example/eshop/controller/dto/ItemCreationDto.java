@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @ToString
@@ -12,8 +13,8 @@ import lombok.ToString;
 public class ItemCreationDto {
     private Long categorySeq;
     private String name;
-    private String smallImage;
-    private String bigImage;
+    private MultipartFile smallImage;
+    private MultipartFile bigImage;
     private long price;
     private String intro;
     private String content;

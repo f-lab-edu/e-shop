@@ -7,10 +7,12 @@ import com.example.eshop.common.dto.PageRequestDto;
 import com.example.eshop.controller.dto.ItemModificationDto;
 import com.example.eshop.controller.dto.SimpleItemDto;
 
+import java.io.IOException;
+
 public interface ItemService {
-    SimpleItemDto createItem(long adminSeq, ItemCreationDto itemCreationDto);
+    SimpleItemDto createItem(long adminSeq, ItemCreationDto itemCreationDto) throws IOException;
     PageList<SimpleItemDto> getItems(Long adminSeq, PageRequestDto pageRequest);
     DetailedItemDto getItem(long itemSeq);
-    void modifyItem(long itemSeq, ItemModificationDto request);
+    void modifyItem(long itemSeq, ItemModificationDto request) throws IOException;
     void deleteItem(long itemSeq);
 }
