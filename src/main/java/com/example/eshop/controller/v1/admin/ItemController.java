@@ -14,11 +14,8 @@ import com.example.eshop.controller.dto.SimpleItemDto;
 import com.example.eshop.item.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 
 @Slf4j
 @RestController("AdminItemController")

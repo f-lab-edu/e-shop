@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -50,6 +51,18 @@ class AuthControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print());
     }
+
+    @Test
+    @DisplayName("checkDuplicatedId :: 파라미터 미입력 케이스")
+    void checkDuplicatedIdWithNull() throws Exception {
+        mvc.perform(get("/v1/auth/check/duplicated-id")
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().is4xxClientError())
+                .andDo(print());
+    }
+
+
 
     @Test
     @Transactional
