@@ -22,7 +22,7 @@ import java.util.LinkedHashMap;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -43,22 +43,35 @@ class AuthControllerTest {
     }
 
     @Test
-    @DisplayName("checkDuplicatedId :: 정상 케이스")
-    void checkDuplicatedId() throws Exception {
-        mvc.perform(get("/v1/auth/check/duplicated-id?id=hjkim")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .characterEncoding("utf-8"))
-                .andExpect(status().isOk())
-                .andDo(print());
-    }
-
-    @Test
     @DisplayName("checkDuplicatedId :: 파라미터 미입력 케이스")
     void checkDuplicatedIdWithNull() throws Exception {
         mvc.perform(get("/v1/auth/check/duplicated-id")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().is4xxClientError())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("checkDuplicatedId :: 중복아이디 존재 케이스")
+    void checkDuplicatedIdWithExistId() throws Exception {
+        mvc.perform(get("/v1/auth/check/duplicated-id?id=hjkim")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data").value(true))
+                .andDo(print())
+                .andReturn();
+    }
+
+    @Test
+    @DisplayName("checkDuplicatedId :: 중복아이디 미존재 케이스")
+    void checkDuplicatedIdWithNotExistId() throws Exception {
+        mvc.perform(get("/v1/auth/check/duplicated-id?id=asdf")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data").value(false))
                 .andDo(print());
     }
 
@@ -82,9 +95,11 @@ class AuthControllerTest {
                 .andDo(print());
     }
 
+
+
     @Test
     @Transactional
-    @DisplayName("login :: 정상 케이스")
+    @DisplayName("login :: 성공 케이스")
     MvcResult login() throws Exception {
         return mvc.perform(post("/v1/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -94,6 +109,24 @@ class AuthControllerTest {
                 .andDo(print())
                 .andReturn();
     }
+
+    @Test
+    @Transactional
+    @DisplayName("login :: 실패 케이스")
+    MvcResult loginFailed() throws Exception {
+        String failedLoginRequest = objectMapper.writeValueAsString(
+                new LoginDto("hjkim", "1234")
+        );
+        return mvc.perform(post("/v1/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(failedLoginRequest))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andReturn();
+    }
+
+
 
     @Test
     @Transactional
@@ -114,4 +147,14 @@ class AuthControllerTest {
                 .andDo(print());
     }
 
+    @Test
+    @Transactional
+    @DisplayName("refreshToken :: 토큰 누락 케이스")
+    void refreshTokenWithNoToken() throws Exception {
+        mvc.perform(get("/v1/auth/token/refresh")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8"))
+                .andExpect(status().isUnauthorized())
+                .andDo(print());
+    }
 }
