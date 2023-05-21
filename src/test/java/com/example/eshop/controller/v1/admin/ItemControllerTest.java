@@ -18,7 +18,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.mock.web.MockPart;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
@@ -46,7 +45,7 @@ class ItemControllerTest {
     @BeforeAll
     public void login() throws Exception {
         String reqBody = objectMapper.writeValueAsString(
-                new LoginDto("master", "asdf")
+                new LoginDto("master@naver.com", "asdf")
         );
 
         String loginResult = mvc.perform(post("/v1/admin/auth/login")
