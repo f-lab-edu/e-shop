@@ -39,7 +39,7 @@ public class AuthControllerTest {
         this.mvc = mvc;
         this.objectMapper = objectMapper;
         this.loginDto = objectMapper.writeValueAsString(
-                new LoginDto("master", "asdf")
+                new LoginDto("master@naver.com", "asdf")
         );
     }
 
@@ -56,7 +56,7 @@ public class AuthControllerTest {
     @Test
     @DisplayName("checkDuplicatedId :: 중복아이디 존재 케이스")
     void checkDuplicatedIdWithExistId() throws Exception {
-        mvc.perform(get("/v1/admin/auth/check/duplicated-id?id=master")
+        mvc.perform(get("/v1/admin/auth/check/duplicated-id?id=master@naver.com")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("utf-8"))
                 .andExpect(status().isOk())
