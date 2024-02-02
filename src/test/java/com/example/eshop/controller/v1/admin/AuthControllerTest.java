@@ -1,8 +1,9 @@
-package com.example.eshop.controller.v1;
+package com.example.eshop.controller.v1.admin;
 
 import com.example.eshop.common.dto.Result;
+import com.example.eshop.common.type.MemberType;
 import com.example.eshop.common.type.TokenType;
-import com.example.eshop.controller.dto.BuyerUserDto;
+import com.example.eshop.controller.dto.AdminUserDto;
 import com.example.eshop.controller.dto.LoginDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,12 +23,12 @@ import java.util.LinkedHashMap;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class AuthControllerTest {
-
+public class AuthControllerTest {
     private MockMvc mvc;
     private ObjectMapper objectMapper;
     String loginDto;
@@ -38,16 +39,16 @@ class AuthControllerTest {
         this.mvc = mvc;
         this.objectMapper = objectMapper;
         this.loginDto = objectMapper.writeValueAsString(
-                new LoginDto("hjkim@naver.com", "asdf")
+                new LoginDto("master@naver.com", "asdf")
         );
     }
 
     @Test
     @DisplayName("checkDuplicatedId :: 파라미터 미입력 케이스")
     void checkDuplicatedIdWithNull() throws Exception {
-        mvc.perform(get("/v1/auth/check/duplicated-id")
-                .contentType(MediaType.APPLICATION_JSON)
-                .characterEncoding(StandardCharsets.UTF_8))
+        mvc.perform(get("/v1/admin/auth/check/duplicated-id")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().is4xxClientError())
                 .andDo(print());
     }
@@ -55,7 +56,7 @@ class AuthControllerTest {
     @Test
     @DisplayName("checkDuplicatedId :: 중복아이디 존재 케이스")
     void checkDuplicatedIdWithExistId() throws Exception {
-        mvc.perform(get("/v1/auth/check/duplicated-id?id=hjkim@naver.com")
+        mvc.perform(get("/v1/admin/auth/check/duplicated-id?id=master@naver.com")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("utf-8"))
                 .andExpect(status().isOk())
@@ -67,7 +68,7 @@ class AuthControllerTest {
     @Test
     @DisplayName("checkDuplicatedId :: 중복아이디 미존재 케이스")
     void checkDuplicatedIdWithNotExistId() throws Exception {
-        mvc.perform(get("/v1/auth/check/duplicated-id?id=asdf")
+        mvc.perform(get("/v1/admin/auth/check/duplicated-id?id=asdf")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
@@ -82,15 +83,15 @@ class AuthControllerTest {
     @DisplayName("signin :: 정상 케이스")
     void signin() throws Exception {
         String content = objectMapper.writeValueAsString(
-                new BuyerUserDto("hjkim", "test", "01", "test",
+                new AdminUserDto("test", "test", MemberType.ADMIN, "test",
                         "01012341234", "000001",
-                        "Seoul", "Y")
+                        "Seoul")
         );
 
-        mvc.perform(post("/v1/auth/signin")
-                .contentType(MediaType.APPLICATION_JSON)
-                .characterEncoding("utf-8")
-                .content(content))
+        mvc.perform(post("/v1/admin/auth/signin")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(content))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
@@ -101,7 +102,7 @@ class AuthControllerTest {
     @Transactional
     @DisplayName("login :: 성공 케이스")
     MvcResult login() throws Exception {
-        return mvc.perform(post("/v1/auth/login")
+        return mvc.perform(post("/v1/admin/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("utf-8")
                         .content(this.loginDto))
@@ -115,9 +116,9 @@ class AuthControllerTest {
     @DisplayName("login :: 실패 케이스")
     MvcResult loginFailed() throws Exception {
         String failedLoginRequest = objectMapper.writeValueAsString(
-                new LoginDto("hjkim", "1234")
+                new LoginDto("test", "1234")
         );
-        return mvc.perform(post("/v1/auth/login")
+        return mvc.perform(post("/v1/admin/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("utf-8")
                         .content(failedLoginRequest))
@@ -139,7 +140,7 @@ class AuthControllerTest {
         Result result = objectMapper.readValue(stringResult, Result.class);
         LinkedHashMap<String, String> hashMap = (LinkedHashMap<String, String>) result.getData();
 
-        mvc.perform(get("/v1/auth/token/refresh")
+        mvc.perform(get("/v1/admin/auth/token/refresh")
                         .header(TokenType.REFRESH.getHeaderName(), hashMap.get("refreshToken"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("utf-8"))
@@ -151,7 +152,7 @@ class AuthControllerTest {
     @Transactional
     @DisplayName("refreshToken :: 토큰 누락 케이스")
     void refreshTokenWithNoToken() throws Exception {
-        mvc.perform(get("/v1/auth/token/refresh")
+        mvc.perform(get("/v1/admin/auth/token/refresh")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("utf-8"))
                 .andExpect(status().isUnauthorized())

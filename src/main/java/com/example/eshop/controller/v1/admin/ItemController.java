@@ -3,6 +3,8 @@ package com.example.eshop.controller.v1.admin;
 import com.example.eshop.admin.member.core.model.AdminUserEntity;
 import com.example.eshop.aop.admin.Admin;
 import com.example.eshop.aop.admin.AdminLoginCheck;
+import com.example.eshop.common.exception.AccessForbiddenException;
+import com.example.eshop.common.type.MemberType;
 import com.example.eshop.controller.dto.DetailedItemDto;
 import com.example.eshop.controller.dto.ItemCreationDto;
 import com.example.eshop.common.dto.PageList;
@@ -13,6 +15,7 @@ import com.example.eshop.item.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RestController("AdminItemController")
@@ -31,10 +34,12 @@ public class ItemController {
     @AdminLoginCheck
     @PostMapping(value="")
     public SimpleItemDto createItem(@Admin AdminUserEntity admin,
-                           @RequestBody ItemCreationDto item) {
-        log.info("createItem ::: {} {}", admin, item);
+                                    @RequestPart ItemCreationDto item,
+                                    @RequestPart MultipartFile bigImage,
+                                    @RequestPart MultipartFile smallImage) {
+        log.info("createItem ::: {} {} {} {}", admin, item, bigImage, smallImage);
 
-        return itemService.createItem(admin.getAdminNo(), item);
+        return itemService.createItem(admin.getAdminNo(), item, bigImage, smallImage);
     }
 
     /**
@@ -77,10 +82,14 @@ public class ItemController {
     @PutMapping(value="/{itemSeq}")
     public void modifyItem(@PathVariable long itemSeq,
                            @Admin AdminUserEntity admin,
-                           @RequestBody ItemModificationDto request) {
-        log.info("modifyItem ::: {} {} {}", itemSeq, admin, request);
+                           @RequestPart ItemModificationDto request,
+                           @RequestPart MultipartFile bigImage,
+                           @RequestPart MultipartFile smallImage) {
+        log.info("modifyItem ::: {} {} {} {} {}", itemSeq, admin, request, bigImage, smallImage);
 
-        itemService.modifyItem(itemSeq, request);
+        checkHasAuthority(itemSeq, admin);
+
+        itemService.modifyItem(itemSeq, request, bigImage, smallImage);
     }
 
     @AdminLoginCheck
@@ -89,7 +98,23 @@ public class ItemController {
                            @Admin AdminUserEntity admin) {
         log.info("deleteItem ::: {} {}", itemSeq, admin);
 
+        checkHasAuthority(itemSeq, admin);
+
         itemService.deleteItem(itemSeq);
+    }
+
+    private void checkHasAuthority(long itemSeq, AdminUserEntity admin) {
+        if (admin.getLevelCd().equals(MemberType.BUYER.getCode())) {
+            throw new AccessForbiddenException();
+        }
+
+        if (admin.getLevelCd().equals(MemberType.SELLER.getCode())) {
+            DetailedItemDto item = itemService.getItem(itemSeq);
+
+            if (item.getSellerSeq() != admin.getAdminNo()) {
+                throw new AccessForbiddenException();
+            }
+        }
     }
 
 }

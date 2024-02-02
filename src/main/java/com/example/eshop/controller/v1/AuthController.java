@@ -1,5 +1,6 @@
 package com.example.eshop.controller.v1;
 
+import com.example.eshop.common.type.MemberType;
 import com.example.eshop.controller.dto.BuyerUserDto;
 import com.example.eshop.auth.service.AuthService;
 import com.example.eshop.controller.dto.LoginDto;
@@ -79,6 +80,6 @@ public class AuthController {
     public TokenDto refreshToken(@RequestAttribute long userSeq) {
         log.info("refreshToken ::: {}", userSeq);
 
-        return authService.refreshToken(userSeq, "01");
+        return authService.refreshToken(userSeq, MemberType.BUYER.getCode());
     }
 }

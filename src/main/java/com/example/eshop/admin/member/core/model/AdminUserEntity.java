@@ -2,14 +2,12 @@ package com.example.eshop.admin.member.core.model;
 
 import com.example.eshop.common.model.DateInfoEntity;
 import com.example.eshop.common.type.MemberStatus;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Getter
+@ToString
 @NoArgsConstructor
 public class AdminUserEntity extends DateInfoEntity {
     private long adminNo;
